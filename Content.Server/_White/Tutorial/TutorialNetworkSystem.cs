@@ -1,10 +1,16 @@
+using Content.Server.GameTicking;
+using Content.Server.Station.Systems;
 using Content.Server.Tutorial.Systems;
 using Content.Shared.Tutorial;
+using Content.Shared.Players;
+using Content.Shared.Mind;
+using Content.Server.Chat.Managers;
 using Robust.Server.Player;
 using Robust.Shared.Map;
-using Robust.Shared.Network;
+using Robust.Shared.Map.Components;
 using Robust.Shared.Player;
 using System.Numerics;
+using Timer = Robust.Shared.Timing.Timer;
 
 namespace Content.Server.Tutorial.Systems;
 
@@ -12,51 +18,90 @@ public sealed class TutorialNetworkSystem : EntitySystem
 {
     [Dependency] private readonly TutorialArenaSystem _tutorialArena = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
-    [Dependency] private readonly INetManager _netManager = default!;
+    [Dependency] private readonly GameTicker _gameTicker = default!;
+    [Dependency] private readonly StationSpawningSystem _stationSpawning = default!;
+    [Dependency] private readonly IChatManager _chatManager = default!;
+    [Dependency] private readonly IMapManager _mapManager = default!;
 
     public override void Initialize()
     {
         base.Initialize();
-
-        _netManager.RegisterNetMessage<RequestTutorialMessage>();
-        _netManager.RegisterNetMessage<TutorialResponseMessage>();
-
-        SubscribeNetworkEvent<RequestTutorialMessage>(OnRequestTutorial);
+        SubscribeNetworkEvent<RequestTutorialEvent>(OnRequestTutorial);
     }
 
-    private void OnRequestTutorial(RequestTutorialMessage message, EntitySessionEventArgs args)
+    private void OnRequestTutorial(RequestTutorialEvent message, EntitySessionEventArgs args)
     {
         if (args.SenderSession is not ICommonSession player)
             return;
 
-        if (player.AttachedEntity == null)
+        // Проверка на наличие раунда
+        if (_gameTicker.RunLevel != GameRunLevel.InRound)
         {
-            var response = new TutorialResponseMessage
+            _chatManager.DispatchServerMessage(player,
+                "Обучение доступно только во время раунда. Попробуйте позже, когда начнется раунд.");
+
+            RaiseNetworkEvent(new TutorialResponseEvent
             {
                 Success = false,
-                ErrorMessage = "No attached entity"
-            };
-            _netManager.ServerSendMessage(response, player.Channel);
+                ErrorMessage = "Round not started"
+            }, args.SenderSession);
             return;
         }
 
         try
         {
-            var (mapUid, gridUid) = _tutorialArena.AssertTutorialLoaded(player);
-            _transform.SetCoordinates((EntityUid)player.AttachedEntity.Value,
-                new EntityCoordinates(gridUid ?? mapUid, Vector2.One));
+            // Сначала переводим игрока в раунд
+            _gameTicker.PlayerJoinGame(player);
 
-            var successResponse = new TutorialResponseMessage { Success = true };
-            _netManager.ServerSendMessage(successResponse, player.Channel);
+            // Создаем карту
+            var (mapUid, gridUid) = _tutorialArena.AssertTutorialLoaded(player);
+
+            // КРИТИЧЕСКИ ВАЖНАЯ ПРОВЕРКА
+            var mapComponent = EntityManager.GetComponent<MapComponent>(mapUid);
+            if (!_mapManager.MapExists(mapComponent.MapId))
+            {
+                throw new InvalidOperationException($"Tutorial map {mapComponent.MapId} does not exist after creation");
+            }
+
+            // Ждем один тик для синхронизации
+            Timer.Spawn(100, () =>
+            {
+                // Логика создания тела и телепортации
+                if (player.AttachedEntity == null)
+                {
+                    var profile = _gameTicker.GetPlayerProfile(player);
+                    var spawnCoords = new EntityCoordinates(gridUid ?? mapUid, Vector2.One);
+
+                    var mobEntity = _stationSpawning.SpawnPlayerMob(
+                        spawnCoords,
+                        "Passenger",
+                        profile,
+                        null
+                    );
+
+                    var data = player.ContentData();
+                    if (data?.Mind != null)
+                    {
+                        var mindSystem = EntityManager.System<SharedMindSystem>();
+                        mindSystem.TransferTo(data.Mind.Value, mobEntity);
+                    }
+                }
+                else
+                {
+                    _transform.SetCoordinates((EntityUid)player.AttachedEntity.Value,
+                        new EntityCoordinates(gridUid ?? mapUid, Vector2.One));
+                }
+
+                RaiseNetworkEvent(new TutorialResponseEvent { Success = true }, args.SenderSession);
+            });
         }
         catch (Exception ex)
         {
-            var errorResponse = new TutorialResponseMessage
+            RaiseNetworkEvent(new TutorialResponseEvent
             {
                 Success = false,
                 ErrorMessage = ex.Message
-            };
-            _netManager.ServerSendMessage(errorResponse, player.Channel);
+            }, args.SenderSession);
         }
     }
 }

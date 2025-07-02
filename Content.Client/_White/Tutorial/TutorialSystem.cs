@@ -1,27 +1,21 @@
 using Content.Shared.Tutorial;
-using Robust.Shared.Network;
 
 namespace Content.Client.Tutorial;
 
 public sealed class TutorialSystem : EntitySystem
 {
-    [Dependency] private readonly IClientNetManager _netManager = default!;
+    public void RequestTutorial()
+    {
+        RaiseNetworkEvent(new RequestTutorialEvent());
+    }
 
     public override void Initialize()
     {
         base.Initialize();
-
-        _netManager.RegisterNetMessage<RequestTutorialMessage>();
-        _netManager.RegisterNetMessage<TutorialResponseMessage>(OnTutorialResponse);
+        SubscribeNetworkEvent<TutorialResponseEvent>(OnTutorialResponse);
     }
 
-    public void RequestTutorial()
-    {
-        var message = new RequestTutorialMessage();
-        _netManager.ClientSendMessage(message);
-    }
-
-    private void OnTutorialResponse(TutorialResponseMessage message)
+    private void OnTutorialResponse(TutorialResponseEvent message, EntitySessionEventArgs args)
     {
         if (!message.Success && !string.IsNullOrEmpty(message.ErrorMessage))
         {
