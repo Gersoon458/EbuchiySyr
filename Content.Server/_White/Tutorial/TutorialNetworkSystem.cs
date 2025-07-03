@@ -1,16 +1,22 @@
+using System.Collections.Generic;
+using System.Numerics;
+using Robust.Server.GameObjects;
+using Robust.Shared.Map;
+using Robust.Shared.Map.Components;
+using Robust.Shared.Network;
+using Robust.Shared.Player;
 using Content.Server.GameTicking;
+using Robust.Server.Maps;
 using Content.Server.Station.Systems;
-using Content.Server.Tutorial.Systems;
-using Content.Shared.Tutorial;
 using Content.Shared.Players;
 using Content.Shared.Mind;
 using Content.Server.Chat.Managers;
-using Robust.Server.Player;
-using Robust.Shared.Map;
-using Robust.Shared.Map.Components;
-using Robust.Shared.Player;
-using System.Numerics;
-using Timer = Robust.Shared.Timing.Timer;
+using Robust.Shared.Console;
+using Robust.Shared.Timing;
+using Content.Shared.Tutorial;
+using Content.Server.Spawners.EntitySystems;
+using Content.Server.Spawners.Components;
+using Robust.Shared.Random;
 
 namespace Content.Server.Tutorial.Systems;
 
@@ -21,7 +27,8 @@ public sealed class TutorialNetworkSystem : EntitySystem
     [Dependency] private readonly GameTicker _gameTicker = default!;
     [Dependency] private readonly StationSpawningSystem _stationSpawning = default!;
     [Dependency] private readonly IChatManager _chatManager = default!;
-    [Dependency] private readonly IMapManager _mapManager = default!;
+    [Dependency] private readonly IRobustRandom _random = default!;
+    [Dependency] private readonly MetaDataSystem _metaDataSystem = default!;
 
     public override void Initialize()
     {
@@ -34,74 +41,80 @@ public sealed class TutorialNetworkSystem : EntitySystem
         if (args.SenderSession is not ICommonSession player)
             return;
 
-        // Проверка на наличие раунда
         if (_gameTicker.RunLevel != GameRunLevel.InRound)
         {
-            _chatManager.DispatchServerMessage(player,
+            _chatManager.DispatchServerMessage(
+                player,
                 "Обучение доступно только во время раунда. Попробуйте позже, когда начнется раунд.");
 
-            RaiseNetworkEvent(new TutorialResponseEvent
-            {
-                Success = false,
-                ErrorMessage = "Round not started"
-            }, args.SenderSession);
+            RaiseNetworkEvent(
+                new TutorialResponseEvent
+                {
+                    Success = false,
+                    ErrorMessage = "Round not started"
+                },
+                args.SenderSession);
             return;
         }
 
         try
         {
-            // Сначала переводим игрока в раунд
-            _gameTicker.PlayerJoinGame(player);
-
-            // Создаем карту
             var (mapUid, gridUid) = _tutorialArena.AssertTutorialLoaded(player);
 
-            // КРИТИЧЕСКИ ВАЖНАЯ ПРОВЕРКА
-            var mapComponent = EntityManager.GetComponent<MapComponent>(mapUid);
-            if (!_mapManager.MapExists(mapComponent.MapId))
+            if (!Exists(mapUid))
             {
-                throw new InvalidOperationException($"Tutorial map {mapComponent.MapId} does not exist after creation");
+                throw new Exception("Failed to create tutorial map");
             }
 
-            // Ждем один тик для синхронизации
-            Timer.Spawn(100, () =>
+            EntityCoordinates spawnCoords;
+            var possibleSpawnPoints = new List<EntityCoordinates>();
+            var query = EntityQueryEnumerator<SpawnPointComponent, TransformComponent>();
+            while (query.MoveNext(out var uid, out var spawnPoint, out var xform))
             {
-                // Логика создания тела и телепортации
-                if (player.AttachedEntity == null)
+                if (xform.MapUid == mapUid)
                 {
-                    var profile = _gameTicker.GetPlayerProfile(player);
-                    var spawnCoords = new EntityCoordinates(gridUid ?? mapUid, Vector2.One);
-
-                    var mobEntity = _stationSpawning.SpawnPlayerMob(
-                        spawnCoords,
-                        "Passenger",
-                        profile,
-                        null
-                    );
-
-                    var data = player.ContentData();
-                    if (data?.Mind != null)
-                    {
-                        var mindSystem = EntityManager.System<SharedMindSystem>();
-                        mindSystem.TransferTo(data.Mind.Value, mobEntity);
-                    }
+                    possibleSpawnPoints.Add(xform.Coordinates);
                 }
-                else
+            }
+
+            if (possibleSpawnPoints.Count > 0)
+            {
+                spawnCoords = _random.Pick(possibleSpawnPoints);
+            }
+            else
+            {
+                spawnCoords = new EntityCoordinates(gridUid ?? mapUid, Vector2.One);
+                Logger.Warning($"No spawn points found on tutorial map {(mapUid.IsValid() ? Comp<MetaDataComponent>(mapUid).EntityName : "Invalid MapUid")}. Spawning at {spawnCoords}.");
+            }
+
+            if (player.AttachedEntity == null)
+            {
+                _gameTicker.MakeJoinGame(player, EntityUid.Invalid, "Passenger");
+
+                if (player.AttachedEntity != null)
                 {
-                    _transform.SetCoordinates((EntityUid)player.AttachedEntity.Value,
-                        new EntityCoordinates(gridUid ?? mapUid, Vector2.One));
+                    _transform.SetCoordinates((EntityUid)player.AttachedEntity.Value, spawnCoords);
                 }
+            }
+            else
+            {
+                _transform.SetCoordinates((EntityUid) player.AttachedEntity.Value, spawnCoords);
+            }
 
-                RaiseNetworkEvent(new TutorialResponseEvent { Success = true }, args.SenderSession);
-            });
+            RaiseNetworkEvent(new TutorialResponseEvent { Success = true }, args.SenderSession);
         }
         catch (Exception ex)
         {
-            RaiseNetworkEvent(new TutorialResponseEvent
-            {
-                Success = false,
-                ErrorMessage = ex.Message
-            }, args.SenderSession);
+            Logger.Error($"Tutorial failed for {player.Name}: {ex}");
+            // Удалена строка: _chatManager.DispatchServerMessage(player, $"Ошибка при создании обучения: {ex.Message}");
+
+            RaiseNetworkEvent(
+                new TutorialResponseEvent
+                {
+                    Success = false,
+                    ErrorMessage = ex.Message
+                },
+                args.SenderSession);
         }
     }
 }
