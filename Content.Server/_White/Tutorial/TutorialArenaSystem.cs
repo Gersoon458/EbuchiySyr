@@ -35,18 +35,15 @@ public sealed class TutorialArenaSystem : EntitySystem
             if (_mapManager.MapExists(mapComponent.MapId) && _mapManager.IsMapInitialized(mapComponent.MapId))
             {
                 if (ArenaGrid.TryGetValue(player.UserId, out var tutorialGrid) &&
-                    !Deleted(tutorialGrid) && !Terminating(tutorialGrid.Value))
+                    tutorialGrid.HasValue && !Deleted(tutorialGrid.Value) && !Terminating(tutorialGrid.Value))
                 {
                     return (tutorialMap, tutorialGrid);
                 }
             }
-            // Если карта существует, но не инициализирована, удаляем её и создаем заново
-            else if (_mapManager.MapExists(mapComponent.MapId))
-            {
-                _mapManager.DeleteMap(mapComponent.MapId);
-                ArenaMap.Remove(player.UserId);
-                ArenaGrid.Remove(player.UserId);
-            }
+            // Если карта существует, но есть проблемы, удаляем её
+            _mapManager.DeleteMap(mapComponent.MapId);
+            ArenaMap.Remove(player.UserId);
+            ArenaGrid.Remove(player.UserId);
         }
 
         // Создаем новую карту
@@ -56,10 +53,7 @@ public sealed class TutorialArenaSystem : EntitySystem
         ArenaMap[player.UserId] = newMapUid;
         _metaDataSystem.SetEntityName(newMapUid, $"Tutorial-{player.Name}");
 
-        // Устанавливаем паузу карты, чтобы предотвратить её обновление до полной загрузки
-        _mapManager.SetMapPaused(mapId, true);
-
-        // Загружаем содержимое карты из файла
+        // Загружаем содержимое карты из файла (LoadMap автоматически инициализирует карту)
         var grids = _map.LoadMap(mapId, TutorialMapPath);
         if (grids.Count != 0)
         {
@@ -70,10 +64,6 @@ public sealed class TutorialArenaSystem : EntitySystem
         {
             ArenaGrid[player.UserId] = null;
         }
-
-        // Инициализируем карту и снимаем паузу
-        _mapManager.DoMapInitialize(mapId);
-        _mapManager.SetMapPaused(mapId, false);
 
         return (ArenaMap[player.UserId], ArenaGrid[player.UserId]);
     }
