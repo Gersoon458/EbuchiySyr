@@ -19,42 +19,30 @@ public sealed class TutorialArenaSystem : EntitySystem
     [Dependency] private readonly MapLoaderSystem _map = default!;
     [Dependency] private readonly MetaDataSystem _metaDataSystem = default!;
 
-    public const string TutorialMapPath = "/Maps/_White/Test/tutorial_arena.yml"; // Убедитесь, что этот путь верен
+    public const string TutorialMapPath = "/Maps/_White/Test/tutorial_arena.yml";
 
     public Dictionary<NetUserId, EntityUid> ArenaMap { get; private set; } = new();
     public Dictionary<NetUserId, EntityUid?> ArenaGrid { get; private set; } = new();
 
     public (EntityUid Map, EntityUid? Grid) AssertTutorialLoaded(ICommonSession player)
     {
-        // Проверяем существующую карту
-        if (ArenaMap.TryGetValue(player.UserId, out var tutorialMap) &&
-            !Deleted(tutorialMap) && !Terminating(tutorialMap))
+        // Всегда создаем новую карту, предварительно удалив старую
+        if (ArenaMap.TryGetValue(player.UserId, out var existingMap) && !Deleted(existingMap))
         {
-            var mapComponent = Comp<MapComponent>(tutorialMap);
-            // Проверяем, существует ли карта и инициализирована ли она
-            if (_mapManager.MapExists(mapComponent.MapId) && _mapManager.IsMapInitialized(mapComponent.MapId))
-            {
-                if (ArenaGrid.TryGetValue(player.UserId, out var tutorialGrid) &&
-                    tutorialGrid.HasValue && !Deleted(tutorialGrid.Value) && !Terminating(tutorialGrid.Value))
-                {
-                    return (tutorialMap, tutorialGrid);
-                }
-            }
-            // Если карта существует, но есть проблемы, удаляем её
-            _mapManager.DeleteMap(mapComponent.MapId);
-            ArenaMap.Remove(player.UserId);
-            ArenaGrid.Remove(player.UserId);
+            var mapId = Comp<MapComponent>(existingMap).MapId;
+            _mapManager.DeleteMap(mapId);
         }
 
         // Создаем новую карту
-        var mapId = _mapManager.CreateMap();
-        var newMapUid = _mapManager.GetMapEntityId(mapId);
+        var newMapId = _mapManager.CreateMap();
+        var newMapUid = _mapManager.GetMapEntityId(newMapId);
 
         ArenaMap[player.UserId] = newMapUid;
         _metaDataSystem.SetEntityName(newMapUid, $"Tutorial-{player.Name}");
 
-        // Загружаем содержимое карты из файла (LoadMap автоматически инициализирует карту)
-        var grids = _map.LoadMap(mapId, TutorialMapPath);
+        var grids = _map.LoadMap(newMapId, TutorialMapPath);
+        _mapManager.SetMapPaused(newMapId, false);
+
         if (grids.Count != 0)
         {
             _metaDataSystem.SetEntityName(grids[0], $"TutorialGrid-{player.Name}");

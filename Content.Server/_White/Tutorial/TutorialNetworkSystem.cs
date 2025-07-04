@@ -1,22 +1,17 @@
-using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
-using Robust.Server.GameObjects;
 using Robust.Shared.Map;
-using Robust.Shared.Map.Components;
-using Robust.Shared.Network;
 using Robust.Shared.Player;
 using Content.Server.GameTicking;
-using Robust.Server.Maps;
 using Content.Server.Station.Systems;
-using Content.Shared.Players;
 using Content.Shared.Mind;
 using Content.Server.Chat.Managers;
-using Robust.Shared.Console;
-using Robust.Shared.Timing;
 using Content.Shared.Tutorial;
-using Content.Server.Spawners.EntitySystems;
-using Content.Server.Spawners.Components;
 using Robust.Shared.Random;
+using Content.Shared.Mobs.Components;
+using Content.Server.Mind.Commands;
+using Content.Shared.Mind.Components;
+using Content.Server.Spawners.Components;
 
 namespace Content.Server.Tutorial.Systems;
 
@@ -29,6 +24,7 @@ public sealed class TutorialNetworkSystem : EntitySystem
     [Dependency] private readonly IChatManager _chatManager = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly MetaDataSystem _metaDataSystem = default!;
+    [Dependency] private readonly SharedMindSystem _mindSystem = default!;
 
     public override void Initialize()
     {
@@ -59,54 +55,64 @@ public sealed class TutorialNetworkSystem : EntitySystem
 
         try
         {
+            // Проверяем наличие существующей карты для игрока
+            if (_tutorialArena.ArenaMap.ContainsKey(player.UserId))
+            {
+                // Если карта существует, удаляем её
+                _tutorialArena.CleanupTutorial(player.UserId);
+            }
+
+            // Создаем новую карту
             var (mapUid, gridUid) = _tutorialArena.AssertTutorialLoaded(player);
 
-            if (!Exists(mapUid))
-            {
-                throw new Exception("Failed to create tutorial map");
-            }
+            // Впускаем игрока в игру (аналогично PlayerJoinGame)
+            _gameTicker.PlayerJoinGame(player);
 
-            EntityCoordinates spawnCoords;
-            var possibleSpawnPoints = new List<EntityCoordinates>();
-            var query = EntityQueryEnumerator<SpawnPointComponent, TransformComponent>();
-            while (query.MoveNext(out var uid, out var spawnPoint, out var xform))
+            // Ищем спавнер таракана на карте
+            EntityCoordinates? spawnCoordinates = null;
+            var spawnerQuery = EntityQueryEnumerator<ConditionalSpawnerComponent, TransformComponent>();
+            while (spawnerQuery.MoveNext(out var spawnerUid, out var spawner, out var spawnerXform))
             {
-                if (xform.MapUid == mapUid)
+                if (spawnerXform.MapUid == mapUid &&
+                    MetaData(spawnerUid).EntityPrototype?.ID == "SpawnMobCockroach")
                 {
-                    possibleSpawnPoints.Add(xform.Coordinates);
+                    spawnCoordinates = spawnerXform.Coordinates;
+                    break;
                 }
             }
 
-            if (possibleSpawnPoints.Count > 0)
+            // Если спавнер не найден, используем центр грида
+            if (spawnCoordinates == null && gridUid.HasValue)
             {
-                spawnCoords = _random.Pick(possibleSpawnPoints);
+                spawnCoordinates = new EntityCoordinates(gridUid.Value, Vector2.Zero);
+            }
+
+            if (spawnCoordinates.HasValue)
+            {
+                // Создаем Mind для игрока (аналогично SpawnObserver)
+                var name = _gameTicker.GetPlayerProfile(player).Name;
+                var (mindId, mindComp) = _mindSystem.CreateMind(player.UserId, name);
+                _mindSystem.SetUserId(mindId, player.UserId);  // Pass only mindId, not the tuple
+
+                // Спавним таракана на месте спавнера (аналогично SpawnPlayerMob)
+                var cockroach = Spawn("MobCockroach", spawnCoordinates.Value);
+
+                // Делаем таракана разумным
+                MakeSentientCommand.MakeSentient(cockroach, EntityManager, true, true);
+
+                // Передаем управление игроку  
+                _mindSystem.TransferTo(mindId, cockroach);
+
+                RaiseNetworkEvent(new TutorialResponseEvent { Success = true }, args.SenderSession);
             }
             else
             {
-                spawnCoords = new EntityCoordinates(gridUid ?? mapUid, Vector2.One);
-                Logger.Warning($"No spawn points found on tutorial map {(mapUid.IsValid() ? Comp<MetaDataComponent>(mapUid).EntityName : "Invalid MapUid")}. Spawning at {spawnCoords}.");
+                throw new Exception("No spawn location found for cockroach");
             }
-
-            if (player.AttachedEntity == null)
-            {
-                _gameTicker.MakeJoinGame(player, EntityUid.Invalid, "Passenger");
-
-                if (player.AttachedEntity != null)
-                {
-                    _transform.SetCoordinates((EntityUid)player.AttachedEntity.Value, spawnCoords);
-                }
-            }
-            else
-            {
-                _transform.SetCoordinates((EntityUid) player.AttachedEntity.Value, spawnCoords);
-            }
-
-            RaiseNetworkEvent(new TutorialResponseEvent { Success = true }, args.SenderSession);
         }
         catch (Exception ex)
         {
             Logger.Error($"Tutorial failed for {player.Name}: {ex}");
-            // Удалена строка: _chatManager.DispatchServerMessage(player, $"Ошибка при создании обучения: {ex.Message}");
 
             RaiseNetworkEvent(
                 new TutorialResponseEvent

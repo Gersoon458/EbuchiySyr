@@ -14,7 +14,7 @@ entities:
     - type: MetaData
     - type: Transform
       pos: 0.43750095,0.583333
-      parent: invalid
+      parent: 161
     - type: MapGrid
       chunks:
         -1,-1:
@@ -121,6 +121,14 @@ entities:
           - 0
           - 0
           - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
+          - 0
         chunkSize: 4
     - type: OccluderTree
     - type: Shuttle
@@ -130,6 +138,18 @@ entities:
     - type: GravityShake
       shakeTimes: 10
     - type: GasTileOverlay
+  - uid: 161
+    components:
+    - type: MetaData
+      name: Map Entity
+    - type: Transform
+    - type: Map
+      mapPaused: True
+    - type: PhysicsMap
+    - type: GridTree
+    - type: MovedGrids
+    - type: Broadphase
+    - type: OccluderTree
 - proto: AirlockCommandLocked
   entities:
   - uid: 37
@@ -528,6 +548,13 @@ entities:
     components:
     - type: Transform
       pos: -7.5,6.5
+      parent: 104
+- proto: SpawnMobCockroach
+  entities:
+  - uid: 162
+    components:
+    - type: Transform
+      pos: -0.5,-0.5
       parent: 104
 - proto: SubstationBasic
   entities:
