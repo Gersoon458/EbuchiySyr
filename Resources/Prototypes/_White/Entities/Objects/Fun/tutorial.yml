@@ -1,0 +1,319 @@
+# Floor
+- type: entity
+  id: TutorialFloorBlack
+  name: digital
+  suffix: floor
+  placement:
+    mode: SnapgridCenter
+    snap:
+    - Wall
+  components:
+  - type: Sprite
+    drawdepth: FloorTiles
+    sprite: _White/Objects/Fun/Tutorial/tutorial.rsi
+    layers:
+    - state: blackdigi
+  - type: Transform
+    anchored: true
+  - type: Tag
+    tags:
+    - HideContextMenu
+  - type: Clickable
+  - type: IconSmooth
+    key: digifloor
+    mode: NoSprite
+
+- type: entity
+  id: TutorialFloor
+  parent: TutorialFloorBlack
+  name: digital
+  components:
+  - type: Sprite
+    drawdepth: FloorTiles
+    sprite: _White/Objects/Fun/Tutorial/floor.rsi
+    layers:
+    - state: floor
+    - map: [ "enum.EdgeLayer.South" ]
+      state: floor_S
+    - map: [ "enum.EdgeLayer.East" ]
+      state: floor_E
+    - map: [ "enum.EdgeLayer.North" ]
+      state: floor_N
+    - map: [ "enum.EdgeLayer.West" ]
+      state: floor_W
+    - map: [ "enum.EdgeLayer.SouthEast" ]
+      state: floor_SE
+    - map: [ "enum.EdgeLayer.NorthEast" ]
+      state: floor_NE
+    - map: [ "enum.EdgeLayer.NorthWest" ]
+      state: floor_NW
+    - map: [ "enum.EdgeLayer.SouthWest" ]
+      state: floor_SW
+  - type: IconSmooth
+    key: digifloor
+    mode: NoSprite
+  - type: SmoothEdge
+
+- type: entity
+  id: TutorialFloorMini
+  parent: TutorialFloor
+  components:
+  - type: Sprite
+    drawdepth: FloorTiles
+    sprite: _White/Objects/Fun/Tutorial/floormini.rsi
+    layers:
+    - state: floormini
+    - map: [ "enum.EdgeLayer.South" ]
+      state: floor_S
+    - map: [ "enum.EdgeLayer.East" ]
+      state: floor_E
+    - map: [ "enum.EdgeLayer.North" ]
+      state: floor_N
+    - map: [ "enum.EdgeLayer.West" ]
+      state: floor_W
+    - map: [ "enum.EdgeLayer.SouthEast" ]
+      state: floor_SE
+    - map: [ "enum.EdgeLayer.NorthEast" ]
+      state: floor_NE
+    - map: [ "enum.EdgeLayer.NorthWest" ]
+      state: floor_NW
+    - map: [ "enum.EdgeLayer.SouthWest" ]
+      state: floor_SW
+# Wall
+- type: entity
+  id: TutorialWall
+  name: digital
+  parent: BaseWall
+  components:
+  - type: Sprite
+    drawDepth: Walls
+    sprite: _White/Objects/Fun/Tutorial/tutorial.rsi
+  - type: Icon
+    sprite: _White/Objects/Fun/Tutorial/tutorial.rsi
+    state: full
+  - type: IconSmooth
+    key: walls
+    base: digi
+  - type: Tag
+    tags:
+    - HideContextMenu
+  - type: Clickable
+  - type: Occluder
+    enabled: False
+
+- type: entity
+  id: TutorialBlackWall
+  suffix: wall
+  name: digital
+  parent: BaseWall
+  components:
+  - type: Sprite
+    drawDepth: Walls
+    sprite: _White/Objects/Fun/Tutorial/tutorial.rsi
+    state: blackdigi
+  - type: Icon
+    sprite: _White/Objects/Fun/Tutorial/tutorial.rsi
+    state: blackdigi
+  - type: Tag
+    tags:
+    - HideContextMenu
+# Airlock
+- type: entity
+  id: TutorialAirlock
+  parent: BaseStructure
+  name: airlock
+  abstract: True
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: InteractionOutline
+  - type: Sprite
+    sprite: Structures/Doors/Airlocks/Standard/basic.rsi
+    layers:
+    - state: closed
+      map: ["enum.DoorVisualLayers.Base"]
+  - type: AnimationPlayer
+  - type: Physics
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.49,-0.49,0.49,0.49"
+        density: 100
+        mask:
+        - FullTileMask
+        layer:
+        - AirlockLayer
+  - type: ContainerContainer
+    containers:
+      board: !type:Container
+  - type: AccessReader
+  - type: Door
+    canCrush: false
+    openingAnimationTime: 1.0
+    closingAnimationTime: 1.0
+    closeTimeOne: 0.2
+    closeTimeTwo: 0.8
+    openTimeOne: 0.8
+    openTimeTwo: 0.2
+    openSound:
+      path: /Audio/_White/Misc/Tutorial/cyberdooropen.ogg
+      params:
+        volume: 24
+    closeSound:
+      path: /Audio/_White/Misc/Tutorial/cyberdoorclose.ogg
+      params:
+        volume: 24
+  - type: DoorBolt
+  - type: Appearance
+  - type: ApcPowerReceiver
+    powerLoad: 20
+  - type: ExtensionCableReceiver
+  - type: DoorSignalControl
+  - type: DeviceNetwork
+    deviceNetId: Wireless
+    receiveFrequencyId: BasicDevice
+  - type: WirelessNetworkConnection
+    range: 200
+  - type: WiresVisuals
+  - type: DeviceLinkSink
+    ports:
+    - Open
+    - Close
+    - Toggle
+    - AutoClose
+    - DoorBolt
+  - type: DeviceLinkSource
+    ports:
+    - DoorStatus
+    lastSignals:
+      DoorStatus: false
+  - type: Airtight
+    noAirWhenFullyAirBlocked: false
+  - type: Occluder
+  - type: PlacementReplacement
+    key: walls
+
+- type: entity
+  id: TutorialAirlock3x1
+  parent: TutorialAirlock
+  name: airlock
+  components:
+  - type: Sprite
+    sprite: _White/Objects/Fun/Tutorial/door3x1.rsi
+    layers:
+    - state: closed
+      shader: unshaded
+      map: ["enum.DoorVisualLayers.Base"]
+  - type: IconSmooth
+    key: digi
+    mode: NoSprite
+  - type: Occluder
+    boundingBox: "-1.5,-0.499,1.5,-0.5"
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-1.49,-0.49,1.49,0.49"
+        density: 100
+        mask:
+        - FullTileMask
+        layer:
+        - AirlockLayer
+#Button
+- type: entity
+  id: TutorialSwitch
+  name: signal switch
+  description: It's a switch for toggling power to things.
+  placement:
+    mode: SnapgridCenter
+    snap:
+    - Wallmount
+  components:
+  - type: WallMount
+    arc: 360
+  - type: Clickable
+  - type: InteractionOutline
+  - type: Physics
+    canCollide: false
+  - type: Sprite
+    drawdepth: SmallObjects
+    sprite: _White/Objects/Fun/Tutorial/tutorial.rsi
+    layers:
+    - state: button
+      shader: unshaded
+  - type: SignalSwitch
+  - type: UseDelay
+    delay: 0.5
+  - type: Rotatable
+  - type: Fixtures
+  - type: DeviceNetwork
+    deviceNetId: Wireless
+  - type: WirelessNetworkConnection
+    range: 200
+  - type: DeviceLinkSource
+    ports:
+    - On
+    - Off
+    - Status
+    lastSignals:
+      Status: false
+  - type: ChatMessage
+    message: "Добро пожаловать на станцию!"
+    sender: "К.О.М.А.Р."
+    textColor: "#20a2ea" # #00FFFF
+    senderColor: "#20a2ea" # #00FFFF
+    senderFont: "Bedstead"
+    senderFontSize: 16
+    messageFont: "ChatBold"
+    fontSize: 14
+    cooldown: 30
+    sound: /Audio/Voice/Talk/pai.ogg
+    params:
+      volume: 24
+#Explanation
+- type: entity
+  id: TutorialExplanation
+  name: explanation
+  description: This object explains something when clecked.
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: Clickable
+  - type: InteractionOutline
+  - type: Sprite
+    drawdepth: SmallObjects
+    sprite: _White/Objects/Fun/Tutorial/tutorial.rsi
+    layers:
+    - state: explanation
+      shader: unshaded
+  - type: ChatMessage
+    message: "Добро пожаловать на станцию!"
+    sender: "К.О.М.А.Р."
+    textColor: "#20a2ea" # #00FFFF
+    senderColor: "#20a2ea" # #00FFFF
+    senderFont: "Bedstead"
+    senderFontSize: 16
+    messageFont: "ChatBold"
+    fontSize: 14
+    cooldown: 30
+    sound: /Audio/Voice/Talk/pai.ogg
+    params:
+      volume: 24
+#Light
+- type: entity
+  name: light marker
+  id: TutorialLightMarker
+  parent: MarkerBase
+  components:
+  - type: Sprite
+    layers:
+    - state: green
+    - sprite: _White/Objects/Fun/Tutorial/tutorial.rsi
+      state: light
+  - type: PointLight
+    color: "#D2DCF2"
+    radius: 10
+    softness: 1

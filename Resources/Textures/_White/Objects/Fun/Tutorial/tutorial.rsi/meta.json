@@ -1,0 +1,68 @@
+{
+    "version": 1,
+    "license": "CC-BY-SA-4.0",
+    "copyright": "Made by Gersoon",
+    "size": {
+        "x": 32,
+        "y": 32
+    },
+    "states": [
+        {
+            "name": "button",
+            "delays": [
+                [
+                    1.0,0.05,0.25,0.05,0.4,1.0,0.05,0.25,0.05,0.4,1.0,0.05,0.7,1.0,0.05,0.7
+                ]
+            ]
+        },
+        {
+            "name": "explanation",
+            "delays": [
+                [
+                    1.0,0.05,0.25,0.05,0.4,1.0,0.05,0.25,0.05,0.4,1.0,0.05,0.7,1.0,0.05,0.7
+                ]
+            ]
+        },
+        {
+            "name": "blackdigi"
+        },
+        {
+            "name": "light"
+        },
+        {
+            "name": "full"
+        },
+        {
+            "name": "digi0",
+            "directions": 4
+        },
+        {
+            "name": "digi1",
+            "directions": 4
+        },
+        {
+            "name": "digi2",
+            "directions": 4
+        },
+        {
+            "name": "digi3",
+            "directions": 4
+        },
+        {
+            "name": "digi4",
+            "directions": 4
+        },
+        {
+            "name": "digi5",
+            "directions": 4
+        },
+        {
+            "name": "digi6",
+            "directions": 4
+        },
+        {
+            "name": "digi7",
+            "directions": 4
+        }
+    ]
+}

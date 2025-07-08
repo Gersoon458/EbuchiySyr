@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-4.0",
+  "copyright": "Made by Gersoon",
+  "size": {
+    "x": 96,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "closed",
+      "delays": [
+        [
+          0.2,0.3,0.4,0.5,0.6,0.5,0.4,0.3
+        ]
+      ]
+    },
+    {
+      "name": "closing",
+      "delays": [
+        [
+          0.1,0.1,0.1,0.1,0.2,0.2,0.2
+        ]
+      ]
+    },
+    {
+      "name": "open",
+      "delays": [
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "name": "opening",
+      "delays": [
+        [
+          0.2,0.2,0.2,0.1,0.1,0.1,0.1
+        ]
+      ]
+    }
+  ]
+}

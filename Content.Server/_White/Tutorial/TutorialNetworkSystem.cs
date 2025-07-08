@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Numerics;
 using Robust.Shared.Map;
 using Robust.Shared.Player;
@@ -8,9 +7,7 @@ using Content.Shared.Mind;
 using Content.Server.Chat.Managers;
 using Content.Shared.Tutorial;
 using Robust.Shared.Random;
-using Content.Shared.Mobs.Components;
 using Content.Server.Mind.Commands;
-using Content.Shared.Mind.Components;
 using Content.Server.Spawners.Components;
 
 namespace Content.Server.Tutorial.Systems;
@@ -74,7 +71,7 @@ public sealed class TutorialNetworkSystem : EntitySystem
             while (spawnerQuery.MoveNext(out var spawnerUid, out var spawner, out var spawnerXform))
             {
                 if (spawnerXform.MapUid == mapUid &&
-                    MetaData(spawnerUid).EntityPrototype?.ID == "SpawnMobCockroach")
+                    MetaData(spawnerUid).EntityPrototype?.ID == "MarkerMobTutorial")
                 {
                     spawnCoordinates = spawnerXform.Coordinates;
                     break;
@@ -95,12 +92,12 @@ public sealed class TutorialNetworkSystem : EntitySystem
                 _mindSystem.SetUserId(mindId, player.UserId);  // Pass only mindId, not the tuple
 
                 // Спавним таракана на месте спавнера (аналогично SpawnPlayerMob)
-                var cockroach = Spawn("MobCockroach", spawnCoordinates.Value);
+                var cockroach = Spawn("MobTutorial", spawnCoordinates.Value);
 
                 // Делаем таракана разумным
                 MakeSentientCommand.MakeSentient(cockroach, EntityManager, true, true);
 
-                // Передаем управление игроку  
+                // Передаем управление игроку
                 _mindSystem.TransferTo(mindId, cockroach);
 
                 RaiseNetworkEvent(new TutorialResponseEvent { Success = true }, args.SenderSession);

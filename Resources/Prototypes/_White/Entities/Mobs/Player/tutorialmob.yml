@@ -1,0 +1,46 @@
+- type: entity
+  name: tutorial mob
+  parent: BaseMob
+  id: MobTutorial
+  description: blblblblAAAAAA
+  components:
+  - type: Sprite
+    drawdepth: Mobs
+    sprite: _White/Mobs/tutorialmob.rsi
+    layers:
+    - state: mob
+      map: ["enum.DamageStateVisualLayers.Base"]
+  - type: Hands
+  - type: CombatMode
+  - type: Puller
+  - type: Buckle
+  - type: Strippable
+  - type: Stripping
+  - type: ComplexInteraction
+  - type: Inventory
+  - type: InventorySlots
+  - type: MovementSpeedModifier
+    baseWalkSpeed: 2.5
+    baseSprintSpeed: 4.5
+  - type: Body
+    prototype: Human
+    thermalVisibility: false
+  - type: UserInterface
+    interfaces:
+      enum.StrippingUiKey.Key:
+        type: StrippableBoundUserInterface
+  - type: Access
+    groups:
+    - AllAccess
+    - Silicon
+
+- type: entity
+  name: Tutorial Mob Marker
+  id: MarkerMobTutorial
+  parent: MarkerBase
+  components:
+  - type: Sprite
+    layers:
+    - state: green
+    - sprite: _White/Mobs/tutorialmob.rsi
+      state: icon
