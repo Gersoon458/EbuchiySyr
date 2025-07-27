@@ -149,6 +149,7 @@
     containers:
       board: !type:Container
   - type: AccessReader
+    containerAccessProvider: board
   - type: Door
     canCrush: false
     openingAnimationTime: 1.0
@@ -200,6 +201,9 @@
   parent: TutorialAirlock
   name: airlock
   components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsMaintenance ]
   - type: Sprite
     sprite: _White/Objects/Fun/Tutorial/door3x1.rsi
     layers:
@@ -222,6 +226,16 @@
         - FullTileMask
         layer:
         - AirlockLayer
+
+- type: entity
+  id: TutorialAirlock3x1Locked
+  parent: TutorialAirlock3x1
+  suffix: Locked
+  name: airlock
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsCommand ]
 #Button
 - type: entity
   id: TutorialSwitch
@@ -245,6 +259,9 @@
     - state: button
       shader: unshaded
   - type: SignalSwitch
+    onPort: Pressed
+    offPort: Pressed
+    statusPort: Pressed
   - type: UseDelay
     delay: 0.5
   - type: Rotatable
@@ -255,16 +272,12 @@
     range: 200
   - type: DeviceLinkSource
     ports:
-    - On
-    - Off
-    - Status
-    lastSignals:
-      Status: false
+    - Pressed
   - type: ChatMessage
     message: "Добро пожаловать на станцию!"
     sender: "К.О.М.А.Р."
-    textColor: "#20a2ea" # #00FFFF
-    senderColor: "#20a2ea" # #00FFFF
+    textColor: "#20a2ea" # #20c2ea
+    senderColor: "#20a2ea" # #20c2ea
     senderFont: "Bedstead"
     senderFontSize: 16
     messageFont: "ChatBold"
@@ -292,8 +305,8 @@
   - type: ChatMessage
     message: "Добро пожаловать на станцию!"
     sender: "К.О.М.А.Р."
-    textColor: "#20a2ea" # #00FFFF
-    senderColor: "#20a2ea" # #00FFFF
+    textColor: "#20a2ea" # #20c2ea
+    senderColor: "#20a2ea" # #20c2ea
     senderFont: "Bedstead"
     senderFontSize: 16
     messageFont: "ChatBold"

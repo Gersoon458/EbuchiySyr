@@ -31,8 +31,7 @@
         type: StrippableBoundUserInterface
   - type: Access
     groups:
-    - AllAccess
-    - Silicon
+    - General
 
 - type: entity
   name: Tutorial Mob Marker

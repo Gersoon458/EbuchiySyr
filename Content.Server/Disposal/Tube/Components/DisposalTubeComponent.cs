@@ -35,4 +35,21 @@ public sealed partial class DisposalTubeComponent : Component
             { "Blunt", 0.0 },
         }
     };
+    /// <summary>
+    /// Time in seconds for entities to transit through this tube
+    /// </summary>
+    [DataField("transitTime"), ViewVariables(VVAccess.ReadWrite)]
+    public float TransitTime { get; set; } = 0.1f;
+
+    /// <summary>
+    /// Multiplier for throw speed when entities exit this tube
+    /// </summary>
+    [DataField("throwSpeedMultiplier"), ViewVariables(VVAccess.ReadWrite)]
+    public float ThrowSpeedMultiplier { get; set; } = 0.8f;
+
+    /// <summary>
+    /// Multiplier for throw distance when entities exit this tube
+    /// </summary>
+    [DataField("throwForceMultiplier"), ViewVariables(VVAccess.ReadWrite)]
+    public float ThrowForceMultiplier { get; set; } = 1.0f;
 }

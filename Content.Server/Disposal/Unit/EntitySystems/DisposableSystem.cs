@@ -81,149 +81,175 @@ namespace Content.Server.Disposal.Unit.EntitySystems
                    HasComp<BodyComponent>(toInsert);
         }
 
-        public void ExitDisposals(EntityUid uid, DisposalHolderComponent? holder = null, TransformComponent? holderTransform = null)
+    public void ExitDisposals(EntityUid uid, DisposalHolderComponent? holder = null, TransformComponent? holderTransform = null)
+    {
+        if (Terminating(uid))
+            return;
+
+        if (!Resolve(uid, ref holder, ref holderTransform))
+            return;
+
+        if (holder.IsExitingDisposals)
         {
-            if (Terminating(uid))
-                return;
+            Log.Error("Tried exiting disposals twice. This should never happen.");
+            return;
+        }
 
-            if (!Resolve(uid, ref holder, ref holderTransform))
-                return;
+        holder.IsExitingDisposals = true;
 
-            if (holder.IsExitingDisposals)
+        // Check for a disposal unit to throw them into and then eject them from it.
+        // *This ejection also makes the target not collide with the unit.*
+        // *This is on purpose.*
+
+        EntityUid? disposalId = null;
+        DisposalUnitComponent? duc = null;
+        var gridUid = holderTransform.GridUid;
+        if (TryComp<MapGridComponent>(gridUid, out var grid))
+        {
+            foreach (var contentUid in _maps.GetLocal(gridUid.Value, grid, holderTransform.Coordinates))
             {
-                Log.Error("Tried exiting disposals twice. This should never happen.");
-                return;
-            }
-
-            holder.IsExitingDisposals = true;
-
-            // Check for a disposal unit to throw them into and then eject them from it.
-            // *This ejection also makes the target not collide with the unit.*
-            // *This is on purpose.*
-
-            EntityUid? disposalId = null;
-            DisposalUnitComponent? duc = null;
-            var gridUid = holderTransform.GridUid;
-            if (TryComp<MapGridComponent>(gridUid, out var grid))
-            {
-                foreach (var contentUid in _maps.GetLocal(gridUid.Value, grid, holderTransform.Coordinates))
+                if (_disposalUnitQuery.TryGetComponent(contentUid, out duc))
                 {
-                    if (_disposalUnitQuery.TryGetComponent(contentUid, out duc))
-                    {
-                        disposalId = contentUid;
-                        break;
-                    }
+                    disposalId = contentUid;
+                    break;
                 }
             }
+        }
 
-            // We're purposely iterating over all the holder's children
-            // because the holder might have something teleported into it,
-            // outside the usual container insertion logic.
-            var children = holderTransform.ChildEnumerator;
-            while (children.MoveNext(out var entity))
+        // We're purposely iterating over all the holder's children
+        // because the holder might have something teleported into it,
+        // outside the usual container insertion logic.
+        var children = holderTransform.ChildEnumerator;
+        while (children.MoveNext(out var entity))
+        {
+            RemComp<BeingDisposedComponent>(entity);
+
+            var meta = _metaQuery.GetComponent(entity);
+            if (holder.Container.Contains(entity))
+                _containerSystem.Remove((entity, null, meta), holder.Container, reparent: false, force: true);
+
+            var xform = _xformQuery.GetComponent(entity);
+            if (xform.ParentUid != uid)
+                continue;
+
+            if (duc != null)
+                _containerSystem.Insert((entity, xform, meta), duc.Container);
+            else
             {
-                RemComp<BeingDisposedComponent>(entity);
+                _xformSystem.AttachToGridOrMap(entity, xform);
+                var direction = holder.CurrentDirection == Direction.Invalid ? holder.PreviousDirection : holder.CurrentDirection;
 
-                var meta = _metaQuery.GetComponent(entity);
-                if (holder.Container.Contains(entity))
-                    _containerSystem.Remove((entity, null, meta), holder.Container, reparent: false, force: true);
-
-                var xform = _xformQuery.GetComponent(entity);
-                if (xform.ParentUid != uid)
-                    continue;
-
-                if (duc != null)
-                    _containerSystem.Insert((entity, xform, meta), duc.Container);
-                else
+                if (direction != Direction.Invalid && _xformQuery.TryGetComponent(gridUid, out var gridXform))
                 {
-                    _xformSystem.AttachToGridOrMap(entity, xform);
-                    var direction = holder.CurrentDirection == Direction.Invalid ? holder.PreviousDirection : holder.CurrentDirection;
+                    var directionAngle = direction.ToAngle();
+                    directionAngle += _xformSystem.GetWorldRotation(gridXform);
 
-                    if (direction != Direction.Invalid && _xformQuery.TryGetComponent(gridUid, out var gridXform))
+                    // Get the tube we're exiting from to calculate throw parameters
+                    DisposalTubeComponent? exitTube = null;
+                    if (holder.CurrentTube != null && _disposalTubeQuery.TryGetComponent(holder.CurrentTube.Value, out exitTube))
                     {
-                        var directionAngle = direction.ToAngle();
-                        directionAngle += _xformSystem.GetWorldRotation(gridXform);
+                        // Calculate speed multiplier based on TransitTime
+                        var speedMultiplier = 0.1f / exitTube.TransitTime;
+
+                        // Limit the speed multiplier to prevent excessive distance changes
+                        var limitedSpeedMultiplier = Math.Min(speedMultiplier * exitTube.ThrowSpeedMultiplier, 5.0f);
+
+                        // Use limited multiplier for throw speed to control distance
+                        var throwSpeed = 10f * limitedSpeedMultiplier;
+
+                        // Direction force affects throw distance independently
+                        var directionForce = 3f * exitTube.ThrowForceMultiplier;
+
+                        _throwing.TryThrow(entity, directionAngle.ToWorldVec() * directionForce, throwSpeed);
+                    }
+                    else
+                    {
+                        // Fallback to current behavior if no tube component found
                         _throwing.TryThrow(entity, directionAngle.ToWorldVec() * 3f, 10f);
                     }
                 }
             }
-
-            if (disposalId != null && duc != null)
-            {
-                _disposalUnitSystem.TryEjectContents(disposalId.Value, duc);
-            }
-
-            if (_atmosphereSystem.GetContainingMixture(uid, false, true) is { } environment)
-            {
-                _atmosphereSystem.Merge(environment, holder.Air);
-                holder.Air.Clear();
-            }
-
-            EntityManager.DeleteEntity(uid);
         }
+
+        if (disposalId != null && duc != null)
+        {
+            _disposalUnitSystem.TryEjectContents(disposalId.Value, duc);
+        }
+
+        if (_atmosphereSystem.GetContainingMixture(uid, false, true) is { } environment)
+        {
+            _atmosphereSystem.Merge(environment, holder.Air);
+            holder.Air.Clear();
+        }
+
+        EntityManager.DeleteEntity(uid);
+    }
 
         // Note: This function will cause an ExitDisposals on any failure that does not make an ExitDisposals impossible.
-        public bool EnterTube(EntityUid holderUid, EntityUid toUid, DisposalHolderComponent? holder = null, TransformComponent? holderTransform = null, DisposalTubeComponent? to = null, TransformComponent? toTransform = null)
-        {
-            if (!Resolve(holderUid, ref holder, ref holderTransform))
-                return false;
+public bool EnterTube(EntityUid holderUid, EntityUid toUid, DisposalHolderComponent? holder = null, TransformComponent? holderTransform = null, DisposalTubeComponent? to = null, TransformComponent? toTransform = null)
+{
+    if (!Resolve(holderUid, ref holder, ref holderTransform))
+        return false;
 
-            if (holder.IsExitingDisposals)
-            {
-                Log.Error("Tried entering tube after exiting disposals. This should never happen.");
-                return false;
-            }
+    if (holder.IsExitingDisposals)
+    {
+        Log.Error("Tried entering tube after exiting disposals. This should never happen.");
+        return false;
+    }
 
-            if (!Resolve(toUid, ref to, ref toTransform))
-            {
-                ExitDisposals(holderUid, holder, holderTransform);
-                return false;
-            }
+    if (!Resolve(toUid, ref to, ref toTransform))
+    {
+        ExitDisposals(holderUid, holder, holderTransform);
+        return false;
+    }
 
-            foreach (var ent in holder.Container.ContainedEntities)
-            {
-                var comp = EnsureComp<BeingDisposedComponent>(ent);
-                comp.Holder = holderUid;
-            }
+    foreach (var ent in holder.Container.ContainedEntities)
+    {
+        var comp = EnsureComp<BeingDisposedComponent>(ent);
+        comp.Holder = holderUid;
+    }
 
-            // Insert into next tube
-            if (!_containerSystem.Insert(holderUid, to.Contents))
-            {
-                ExitDisposals(holderUid, holder, holderTransform);
-                return false;
-            }
+    // Insert into next tube
+    if (!_containerSystem.Insert(holderUid, to.Contents))
+    {
+        ExitDisposals(holderUid, holder, holderTransform);
+        return false;
+    }
 
-            if (holder.CurrentTube != null)
-            {
-                holder.PreviousTube = holder.CurrentTube;
-                holder.PreviousDirection = holder.CurrentDirection;
-            }
+    if (holder.CurrentTube != null)
+    {
+        holder.PreviousTube = holder.CurrentTube;
+        holder.PreviousDirection = holder.CurrentDirection;
+    }
 
-            holder.CurrentTube = toUid;
-            var ev = new GetDisposalsNextDirectionEvent(holder);
-            RaiseLocalEvent(toUid, ref ev);
-            holder.CurrentDirection = ev.Next;
-            holder.StartingTime = 0.1f;
-            holder.TimeLeft = 0.1f;
-            // Logger.GetSawmill("c.s.disposal.holder").Info($"Disposals dir {holder.CurrentDirection}");
+    holder.CurrentTube = toUid;
+    var ev = new GetDisposalsNextDirectionEvent(holder);
+    RaiseLocalEvent(toUid, ref ev);
+    holder.CurrentDirection = ev.Next;
 
-            // Invalid direction = exit now!
-            if (holder.CurrentDirection == Direction.Invalid)
-            {
-                ExitDisposals(holderUid, holder, holderTransform);
-                return false;
-            }
+    // Используем время перемещения из компонента трубы
+    holder.StartingTime = to.TransitTime;
+    holder.TimeLeft = to.TransitTime;
 
-            // damage entities on turns and play sound
-            if (holder.CurrentDirection != holder.PreviousDirection)
-            {
-                foreach (var ent in holder.Container.ContainedEntities)
-                    _damageable.TryChangeDamage(ent, to.DamageOnTurn);
-                _audio.PlayPvs(to.ClangSound, toUid);
-            }
+    // Logger.InfoS("c.s.disposal.holder", $"Disposals dir {holder.CurrentDirection}");
 
-            return true;
-        }
+    // Invalid direction = exit now!
+    if (holder.CurrentDirection == Direction.Invalid)
+    {
+        ExitDisposals(holderUid, holder, holderTransform);
+        return false;
+    }
+
+    // damage entities on turns and play sound
+    if (holder.CurrentDirection != holder.PreviousDirection)
+    {
+        foreach (var ent in holder.Container.ContainedEntities)
+            _damageable.TryChangeDamage(ent, to.DamageOnTurn);
+        _audio.PlayPvs(to.ClangSound, toUid);
+    }
+
+    return true;
+}
 
         public override void Update(float frameTime)
         {
@@ -268,7 +294,7 @@ namespace Content.Server.Disposal.Unit.EntitySystems
 
                 // Find next tube
                 var nextTube = _disposalTubeSystem.NextTubeFor(currentTube, holder.CurrentDirection);
-                if (!EntityManager.EntityExists(nextTube)) 
+                if (!EntityManager.EntityExists(nextTube))
                 {
                     ExitDisposals(uid, holder);
                     break;
