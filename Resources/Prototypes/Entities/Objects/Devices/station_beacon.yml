@@ -34,6 +34,8 @@
         type: NavMapBeaconBoundUserInterface
   - type: Item
     size: Small
+  - type: Visibility
+    layer: 1
   - type: SubFloorHide
   - type: Anchorable
   - type: Construction
@@ -503,6 +505,9 @@
   components:
   - type: NavMapBeacon
     defaultText: station-beacon-kitchen
+  - type: Anchorable
+    flags:
+    - None # No CQC outside Kitchen
 
 - type: entity
   parent: DefaultStationBeaconService
