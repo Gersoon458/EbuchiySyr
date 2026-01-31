@@ -996,7 +996,29 @@
         acts: ["Destruction"]
   - type: IconSmooth
     key: walls
+    subKeys: ["airlocks"]
     base: solid
+
+- type: entity
+  parent: WallSolid
+  id: WallSolidTest
+  components:
+  - type: SmoothEdge
+    requireMatchingKey: true
+    edgeSubKeys: [ "airlocks" ]
+    drawdepth: -1
+  - type: SpriteFade
+  - type: Sprite
+    sprite: Structures/Walls/solid.rsi
+    layers:
+    - map: [ "enum.EdgeLayer.South" ]
+      state: solid_south
+    - map: [ "enum.EdgeLayer.East" ]
+      state: solid_east
+    - map: [ "enum.EdgeLayer.North" ]
+      state: solid_north
+    - map: [ "enum.EdgeLayer.West" ]
+      state: solid_west
 
 - type: entity
   parent: WallShuttleDiagonal

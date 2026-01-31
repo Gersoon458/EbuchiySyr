@@ -356,14 +356,21 @@ namespace Content.Client.IconSmoothing
         {
             while (candidates.MoveNext(out var entity))
             {
-                if (smoothQuery.TryGetComponent(entity, out var other) &&
-                    other.SmoothKey == smooth.SmoothKey &&
-                    other.Enabled)
+                if (smoothQuery.TryGetComponent(entity, out var other) && other.Enabled) // WWDP edit start
                 {
-                    return true;
+                    if (other.SmoothKey == smooth.SmoothKey)
+                        return true;
+
+                    if (smooth.SubKeys != null)
+                    {
+                        foreach (var subKey in smooth.SubKeys)
+                        {
+                            if (!string.IsNullOrEmpty(subKey) && other.SmoothKey == subKey)
+                                return true;
+                        }
+                    } // WWDP edit end
                 }
             }
-
             return false;
         }
 

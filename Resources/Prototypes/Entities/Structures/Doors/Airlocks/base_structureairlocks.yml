@@ -64,6 +64,8 @@
   - type: AccessReader
     containerAccessProvider: board
   - type: Door
+    openDrawDepth: FloorObjects # WWDP edit
+    closedDrawDepth: WallTops # WWDP edit
     crushDamage:
       types:
         Blunt: 15
@@ -184,6 +186,9 @@
   - type: TwistedConstructionTarget
     replacementProto: BloodCultDoor
     doAfterDelay: 10
+  - type: IconSmooth
+    key: airlocks
+    mode: NoSprite
   # WD EDIT END
   placement:
     mode: SnapgridCenter

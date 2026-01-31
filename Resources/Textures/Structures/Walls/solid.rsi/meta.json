@@ -43,6 +43,22 @@
             "directions": 4
         },
         {
+            "name": "solid_south",
+            "directions": 4
+        },
+        {
+            "name": "solid_north",
+            "directions": 4
+        },
+        {
+            "name": "solid_east",
+            "directions": 4
+        },
+        {
+            "name": "solid_west",
+            "directions": 4
+        },
+        {
             "name": "reinf_construct-0"
         },
         {

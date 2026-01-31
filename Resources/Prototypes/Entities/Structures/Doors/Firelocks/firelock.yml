@@ -37,6 +37,7 @@
   - type: Sprite
     sprite: Structures/Doors/Airlocks/Standard/firelock.rsi
     snapCardinals: true
+    noRot: True
     layers:
     - state: closed
       map: ["enum.DoorVisualLayers.Base"]

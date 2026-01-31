@@ -73,7 +73,9 @@
         acts: [ "Destruction" ]
   - type: Airtight
   - type: IconSmooth
-    key: walls
+    key: windows
+    subKeys: ["walls", "airlocks"]
+    enableSelfOverlay: true
     base: window
   - type: Construction
     graph: Window
