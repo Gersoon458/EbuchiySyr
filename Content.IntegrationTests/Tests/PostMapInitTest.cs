@@ -68,6 +68,8 @@ namespace Content.IntegrationTests.Tests
             "/Maps/Shuttles/ShuttleEvent/syndie_evacpod.yml",
             "/Maps/_Lavaland/Lavaland/ruin_toyshop.yml",
             "/Maps/_White/CentralCommand/hub.yml", // WD EDIT
+            "/Maps/_White/CentralCommand/arenaAtlas.yml", // WD EDIT
+            "/Maps/_White/Event/Almagest.yml", // WD EDIT
             "/Maps/_White/WhiteBox.yml", // WD EDIT
             "/Maps/_White/DryDock.yml", // WD EDIT
             "/Maps/_White/Molecule.yml", // WD EDIT
@@ -115,6 +117,7 @@ namespace Content.IntegrationTests.Tests
             "Kettle", //WWDP
             "Molecule", //WWDP
             "CentCommHub", //WWDP
+            "Almagest", //WWDP
         };
 
         /// <summary>
