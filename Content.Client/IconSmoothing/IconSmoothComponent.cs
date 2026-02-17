@@ -30,6 +30,12 @@ namespace Content.Client.IconSmoothing
         public List<string?> SubKeys { get; set; } = new(); // WWDP edit end
 
         /// <summary>
+        ///     Additional keys to smooth with.
+        /// </summary>
+        [DataField]
+        public List<string> AdditionalKeys = new();
+
+        /// <summary>
         ///     Prepended to the RSI state.
         /// </summary>
         [ViewVariables(VVAccess.ReadWrite), DataField("base")]
