@@ -8,8 +8,7 @@
 - type: latheRecipe
   id: ClothingOuterHardsuitCombatStandard
   result: ClothingOuterHardsuitCombatStandard
-  categories:
-  - Tacsuits
+  category: Tacsuits
   completetime: 60
   materials:
      Tungsten: 300
@@ -22,8 +21,7 @@
 - type: latheRecipe
   id: ClothingOuterHardsuitCombatMedical
   result: ClothingOuterHardsuitCombatMedical
-  categories:
-  - Tacsuits
+  category: Tacsuits
   completetime: 60
   materials:
      Tungsten: 300
@@ -37,8 +35,7 @@
 - type: latheRecipe
   id: ClothingOuterHardsuitCombatRiot
   result: ClothingOuterHardsuitCombatRiot
-  categories:
-  - Tacsuits
+  category: Tacsuits
   completetime: 90
   materials:
      Tungsten: 350
@@ -54,8 +51,7 @@
 - type: latheRecipe
   id: ClothingOuterHardsuitCombatAdvanced
   result: ClothingOuterHardsuitCombatAdvanced
-  categories:
-  - Tacsuits
+  category: Tacsuits
   completetime: 120
   materials:
      Tungsten: 500
@@ -69,8 +65,7 @@
 - type: latheRecipe
   id: ClothingOuterHardsuitShanlinUnpainted
   result: ClothingOuterHardsuitShanlinUnpainted
-  categories:
-  - Tacsuits
+  category: Tacsuits
   completetime: 180
   materials:
      Tungsten: 800
@@ -84,8 +79,7 @@
 - type: latheRecipe
   id: ClothingOuterHardsuitShiweiUnpainted
   result: ClothingOuterHardsuitShiweiUnpainted
-  categories:
-  - Tacsuits
+  category: Tacsuits
   completetime: 120
   materials:
      Tungsten: 1000
@@ -100,8 +94,7 @@
 - type: latheRecipe
   id: ClothingOuterHardsuitJuggernautReverseEngineered
   result: ClothingOuterHardsuitJuggernautReverseEngineered
-  categories:
-  - Tacsuits
+  category: Tacsuits
   completetime: 300
   materials: # GOOD LUCK.
      Tungsten: 3000

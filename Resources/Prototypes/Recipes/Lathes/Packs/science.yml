@@ -65,10 +65,10 @@
   id: ScienceWeapons
   recipes:
   - WeaponPistolCHIMP
-  - WeaponForceGun
+  # - WeaponForceGun - EE EDIT
   - WeaponLaserSvalinn
   - WeaponProtoKineticAccelerator
-  - WeaponTetherGun
+  # - WeaponTetherGun - EE EDIT
   - WeaponGauntletGorilla
   # EE EDIT START
   # - WeaponCivilianDisabler - WD EDIT

@@ -1,24 +1,21 @@
-using Content.Client.Power.EntitySystems;
-using Content.Shared.Popups;
 using Content.Shared.Power.Components;
-using Content.Shared.Power.EntitySystems;
 using Content.Shared.UserInterface;
 using Content.Shared.Wires;
 
 namespace Content.Client.Power;
 
-public sealed class ActivatableUIRequiresPowerSystem : SharedActivatableUIRequiresPowerSystem
+public sealed class ActivatableUIRequiresPowerSystem : EntitySystem
 {
-    [Dependency] private readonly SharedPopupSystem _popup = default!;
-
-    protected override void OnActivate(Entity<ActivatableUIRequiresPowerComponent> ent, ref ActivatableUIOpenAttemptEvent args)
+    public override void Initialize()
     {
-        if (args.Cancelled || this.IsPowered(ent.Owner, EntityManager))
-        {
-            return;
-        }
+        base.Initialize();
 
-        _popup.PopupClient(Loc.GetString("base-computer-ui-component-not-powered", ("machine", ent.Owner)), args.User, args.User);
+        SubscribeLocalEvent<ActivatableUIRequiresPowerComponent, ActivatableUIOpenAttemptEvent>(OnActivate);
+    }
+
+    private void OnActivate(EntityUid uid, ActivatableUIRequiresPowerComponent component, ActivatableUIOpenAttemptEvent args)
+    {
+        // Client can't predict the power properly at the moment so rely upon the server to do it.
         args.Cancel();
     }
 }

@@ -1,8 +1,7 @@
 - type: latheRecipe
   id: BasePartRecipe
   abstract: true
-  categories:
-  - Parts
+  category: Parts
 
 # Rating 1
 

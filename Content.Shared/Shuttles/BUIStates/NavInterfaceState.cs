@@ -21,8 +21,6 @@ public sealed class NavInterfaceState
 
     public Dictionary<NetEntity, List<DockingPortState>> Docks;
 
-    public bool RotateWithEntity = true;
-
     /// <summary>
     /// Frontier - the state of the shuttle's inertial dampeners
     /// </summary>

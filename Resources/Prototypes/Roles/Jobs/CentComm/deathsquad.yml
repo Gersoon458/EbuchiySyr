@@ -35,7 +35,7 @@
   storage:
     back:
     # - WeaponPulsePistol - WD EDIT
-    - WeaponRevolverMatebaAP
+    - WeaponRevolverMateba
     - SpeedLoaderMagnumAP
     - SpeedLoaderMagnumAP
     # - BoxFlashbang - WD EDIT
@@ -44,5 +44,3 @@
     - Hypospray
     - BluespaceLifelineImplanter # WD EDIT: DeathAcidifierImplanter -> BluespaceLifelineImplanter
     - FreedomImplanter
-  inhand:
-  - WeaponPulseRifle

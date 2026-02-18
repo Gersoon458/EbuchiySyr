@@ -32,8 +32,6 @@
   parent: BaseMobConstructJuggernaut
   components:
   - type: BloodCultist
-  - type: AnimateOnStartup
-    animation: MobSpawnConstruct
 
 - type: entity
   id: MobConstructJuggernautHoly
@@ -41,6 +39,3 @@
   - BaseMobConstructHoly
   - BaseMobConstructJuggernaut
   name: purified juggernaut
-  components:
-  - type: AnimateOnStartup
-    animation: MobSpawnConstructHoly

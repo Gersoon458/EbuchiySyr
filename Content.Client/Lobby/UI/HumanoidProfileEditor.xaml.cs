@@ -564,7 +564,7 @@ namespace Content.Client.Lobby.UI
             {
                 PreferenceUnavailableButton.SelectId(args.Id);
                 Profile = Profile?.WithPreferenceUnavailable((PreferenceUnavailableMode) args.Id);
-                SetDirty();
+                IsDirty = true;
             };
 
             _jobCategories = new Dictionary<string, BoxContainer>();

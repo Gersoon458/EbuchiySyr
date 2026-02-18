@@ -41,8 +41,7 @@
 - type: latheRecipe
   id: BaseComputerModularCircuitBoard
   result: BaseComputerModularCircuitBoard
-  categories:
-  - Circuitry
+  category: Circuitry
   completetime: 4
   materials:
      Steel: 100

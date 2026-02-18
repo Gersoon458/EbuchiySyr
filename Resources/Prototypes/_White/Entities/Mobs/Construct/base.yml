@@ -7,11 +7,8 @@
   components:
   - type: Sprite
     layers:
-    - map: ["enum.ConstructLayer.Base"]
-      state: construct
-    - map: ["enum.ConstructLayer.Unshaded"]
-      state: glow_cult
-      shader: unshaded
+    - state: construct
+    - state: glow_cult
   - type: MovementSpeedModifier
     baseWalkSpeed: 3
     baseSprintSpeed: 3
@@ -77,8 +74,5 @@
   components:
   - type: Sprite
     layers:
-    - map: ["enum.ConstructLayer.Base"]
-      state: construct
-    - map: ["enum.ConstructLayer.Unshaded"]
-      state: glow_holy
-      shader: unshaded
+    - state: construct
+    - state: glow_holy

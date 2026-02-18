@@ -75,8 +75,7 @@
 - type: latheRecipe
   id: HandheldCrewMonitor
   result: HandheldCrewMonitorEmpty
-  categories:
-  - Tools
+  category: Tools
   completetime: 2
   materials:
     Glass: 1200
@@ -86,8 +85,7 @@
 - type: latheRecipe
   id: HandheldHealthAnalyzer
   result: HandheldHealthAnalyzerEmpty
-  categories:
-  - Tools
+  category: Tools
   completetime: 4
   materials:
     Glass: 500
@@ -250,8 +248,7 @@
 - type: latheRecipe
   id: SyringeCase
   result: SyringeCase
-  categories:
-  - Tools
+  category: Tools
   completetime: 2
   materials:
     Plastic: 100

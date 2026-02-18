@@ -51,7 +51,6 @@
   - type: RadiationBlocker
     resistance: 2
   - type: BlockWeather
-  - type: SunShadowCast
 
 - type: entity
   parent: BaseWall
@@ -81,7 +80,7 @@
         acts: [ "Destruction" ]
 
   - type: IconSmooth
-    key: walls
+    key: bricks
     base: brick
 
 - type: entity

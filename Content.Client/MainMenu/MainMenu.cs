@@ -26,10 +26,7 @@ namespace Content.Client.MainMenu
         [Dependency] private readonly IGameController _controllerProxy = default!;
         [Dependency] private readonly IResourceCache _resourceCache = default!;
         [Dependency] private readonly IUserInterfaceManager _userInterfaceManager = default!;
-        [Dependency] private readonly ILogManager _logManager = default!;
         [Dependency] private readonly IConsoleHost _console = default!;
-
-        private ISawmill _sawmill = default!;
 
         private MainMenuControl _mainMenuControl = default!;
         private bool _isConnecting;
@@ -41,8 +38,6 @@ namespace Content.Client.MainMenu
         /// <inheritdoc />
         protected override void Startup()
         {
-            _sawmill = _logManager.GetSawmill("mainmenu");
-
             _mainMenuControl = new MainMenuControl(_resourceCache, _configurationManager);
             _userInterfaceManager.StateRoot.AddChild(_mainMenuControl);
 
@@ -142,7 +137,7 @@ namespace Content.Client.MainMenu
             catch (ArgumentException e)
             {
                 _userInterfaceManager.Popup($"Unable to connect: {e.Message}", "Connection error.");
-                _sawmill.Warning(e.ToString());
+                Logger.GetSawmill("connection").Warning(e.ToString());
                 _netManager.ConnectFailed -= _onConnectFailed;
                 _setConnectingState(false);
             }

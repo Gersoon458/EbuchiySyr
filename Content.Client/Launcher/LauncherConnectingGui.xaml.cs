@@ -9,6 +9,7 @@ using Robust.Client.UserInterface.XAML;
 using Robust.Shared.Configuration;
 using Robust.Shared.IoC;
 using Robust.Shared.Timing;
+using Robust.Shared.Localization;
 using Robust.Shared.Network;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
@@ -20,24 +21,19 @@ namespace Content.Client.Launcher
     {
         private const float RedialWaitTimeSeconds = 15f;
         private readonly LauncherConnecting _state;
-        private float _waitTime;
-
-        // Pressing reconnect will redial instead of simply reconnecting.
-        private bool _redial;
-
         private readonly IRobustRandom _random;
         private readonly IPrototypeManager _prototype;
         private readonly IConfigurationManager _cfg;
-        private readonly IClipboardManager _clipboard;
+
+        private float _redialWaitTime = RedialWaitTimeSeconds;
 
         public LauncherConnectingGui(LauncherConnecting state, IRobustRandom random,
-            IPrototypeManager prototype, IConfigurationManager config, IClipboardManager clipboard)
+            IPrototypeManager prototype, IConfigurationManager config)
         {
             _state = state;
             _random = random;
             _prototype = prototype;
             _cfg = config;
-            _clipboard = clipboard;
 
             RobustXamlLoader.Load(this);
 
@@ -46,11 +42,14 @@ namespace Content.Client.Launcher
             Stylesheet = IoCManager.Resolve<IStylesheetManager>().SheetSpace;
 
             ChangeLoginTip();
-            RetryButton.OnPressed += ReconnectButtonPressed;
-            ReconnectButton.OnPressed += ReconnectButtonPressed;
-
-            CopyButton.OnPressed += CopyButtonPressed;
-            CopyButtonDisconnected.OnPressed += CopyButtonDisconnectedPressed;
+            ReconnectButton.OnPressed += _ => _state.RetryConnect();
+            // Redial shouldn't fail, but if it does, try a reconnect (maybe we're being run from debug)
+            RedialButton.OnPressed += _ =>
+            {
+                if (!_state.Redial())
+                    _state.RetryConnect();
+            };
+            RetryButton.OnPressed += _ => _state.RetryConnect();
             ExitButton.OnPressed += _ => _state.Exit();
 
             var addr = state.Address;
@@ -60,7 +59,6 @@ namespace Content.Client.Launcher
             state.PageChanged += OnPageChanged;
             state.ConnectFailReasonChanged += ConnectFailReasonChanged;
             state.ConnectionStateChanged += ConnectionStateChanged;
-            state.ConnectFailed += HandleDisconnectReason;
 
             ConnectionStateChanged(state.ConnectionState);
 
@@ -68,37 +66,6 @@ namespace Content.Client.Launcher
             var edim = IoCManager.Resolve<ExtendedDisconnectInformationManager>();
             edim.LastNetDisconnectedArgsChanged += LastNetDisconnectedArgsChanged;
             LastNetDisconnectedArgsChanged(edim.LastNetDisconnectedArgs);
-        }
-
-        // Just button, there's only one at once anyways :)
-        private void ReconnectButtonPressed(BaseButton.ButtonEventArgs args)
-        {
-            if (_redial)
-            {
-                // Redial shouldn't fail, but if it does, try a reconnect (maybe we're being run from debug)
-                if (_state.Redial())
-                    return;
-            }
-
-            _state.RetryConnect();
-        }
-
-        private void CopyButtonPressed(BaseButton.ButtonEventArgs args)
-        {
-            CopyText(ConnectFailReason.Text);
-        }
-
-        private void CopyButtonDisconnectedPressed(BaseButton.ButtonEventArgs args)
-        {
-            CopyText(DisconnectReason.Text);
-        }
-
-        private void CopyText(string? text)
-        {
-            if (!string.IsNullOrEmpty(text))
-            {
-                _clipboard.SetText(text);
-            }
         }
 
         private void ConnectFailReasonChanged(string? reason)
@@ -110,30 +77,9 @@ namespace Content.Client.Launcher
 
         private void LastNetDisconnectedArgsChanged(NetDisconnectedArgs? args)
         {
-            HandleDisconnectReason(args);
-        }
-
-        private void HandleDisconnectReason(INetStructuredReason? reason)
-        {
-            if (reason == null)
-            {
-                _waitTime = 0;
-                _redial = false;
-            }
-            else
-            {
-                _redial = reason.RedialFlag;
-
-                if (reason.Message.Int32Of("delay") is { } delay)
-                {
-                    _waitTime = delay;
-                }
-                else if (_redial)
-                {
-                    _waitTime = RedialWaitTimeSeconds;
-                }
-
-            }
+            var redialFlag = args?.RedialFlag ?? false;
+            RedialButton.Visible = redialFlag;
+            ReconnectButton.Visible = !redialFlag;
         }
 
         private void ChangeLoginTip()
@@ -162,27 +108,16 @@ namespace Content.Client.Launcher
         protected override void FrameUpdate(FrameEventArgs args)
         {
             base.FrameUpdate(args);
-
-            var button = _state.CurrentPage == LauncherConnecting.Page.ConnectFailed
-                ? RetryButton
-                : ReconnectButton;
-
-            _waitTime -= args.DeltaSeconds;
-            if (_waitTime <= 0)
+            _redialWaitTime -= args.DeltaSeconds;
+            if (_redialWaitTime <= 0)
             {
-                button.Disabled = false;
-                var key = _redial
-                    ? "connecting-redial"
-                    : _state.CurrentPage == LauncherConnecting.Page.ConnectFailed
-                        ? "connecting-reconnect"
-                        : "connecting-retry";
-
-                button.Text = Loc.GetString(key);
+                RedialButton.Disabled = false;
+                RedialButton.Text = Loc.GetString("connecting-redial");
             }
             else
             {
-                button.Disabled = true;
-                button.Text = Loc.GetString("connecting-redial-wait", ("time", _waitTime.ToString("00.000")));
+                RedialButton.Disabled = true;
+                RedialButton.Text = Loc.GetString("connecting-redial-wait", ("time", _redialWaitTime.ToString("00.000")));
             }
         }
 

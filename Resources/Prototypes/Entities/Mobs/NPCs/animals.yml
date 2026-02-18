@@ -256,7 +256,6 @@
   - type: EggLayer
     eggSpawn:
     - id: FoodEgg
-  - type: ExamineableHunger
   - type: LanguageKnowledge
     speaks:
     - Chicken
@@ -909,8 +908,7 @@
     bloodMaxVolume: 100
   - type: EggLayer
     eggSpawn:
-    - id:
-  - type: ExamineableHunger
+    - id: FoodEgg
   - type: LanguageKnowledge
     speaks:
     - Duck
@@ -1087,7 +1085,6 @@
     reagentId: Milk
     quantityPerUpdate: 25
     growthDelay: 30
-  - type: ExamineableHunger
   - type: Butcherable
     spawned:
     - id: FoodMeat
@@ -1260,7 +1257,6 @@
     reagentId: MilkGoat
     quantityPerUpdate: 25
     growthDelay: 20
-  - type: ExamineableHunger
   - type: Wooly
   - type: Food
     solution: wool
@@ -1586,10 +1582,10 @@
     - map: [ "ears" ]
     - map: [ "innerBelt" ] # Einstein Engines
     - map: [ "innerNeck" ] # Einstein Engines
+    - map: [ "outerClothing" ]
     - map: [ "eyes" ]
     - map: [ "belt" ]
     - map: [ "id" ]
-    - map: [ "outerClothing" ]
     - map: [ "neck" ]
     - map: [ "back" ]
     - map: [ "enum.HumanoidVisualLayers.FacialHair" ]
@@ -1874,7 +1870,7 @@
   - type: MobThresholds
     thresholds:
       0: Alive
-      100: Critical
+      75: Critical
       200: Dead
   - type: NpcFactionMember
     factions:

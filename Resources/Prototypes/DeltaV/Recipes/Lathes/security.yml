@@ -1,8 +1,7 @@
 - type: latheRecipe
   id: SpeedLoaderSpecial
   result: SpeedLoaderSpecial
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Steel: 200
@@ -10,8 +9,7 @@
 - type: latheRecipe
   id: MagazinePistolSpecial
   result: MagazinePistolSpecial
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Steel: 100
@@ -19,8 +17,7 @@
 - type: latheRecipe
   id: CartridgeSpecial
   result: CartridgeSpecial
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 2
   materials:
     Steel: 20
@@ -28,8 +25,7 @@
 - type: latheRecipe
   id: CartridgeSpecialIncendiary
   result: CartridgeSpecialIncendiary
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 2
   materials:
     Plastic: 20
@@ -37,8 +33,7 @@
 - type: latheRecipe
   id: CartridgeSpecialUranium
   result: CartridgeSpecialUranium
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 2
   materials:
     Plastic: 20
@@ -47,8 +42,7 @@
 - type: latheRecipe
   id: CartridgeSpecialHoly
   result: CartridgeSpecialHoly
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 2
   materials:
     Steel: 15
@@ -57,8 +51,7 @@
 - type: latheRecipe
   id: CartridgeSpecialMindbreaker
   result: CartridgeSpecialMindbreaker
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 2
   materials:
     Plastic: 15
@@ -68,8 +61,7 @@
 - type: latheRecipe
   id: MagazineBoxSpecial
   result: MagazineBoxSpecial
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Steel: 1250
@@ -77,8 +69,7 @@
 - type: latheRecipe
   id: MagazineBoxSpecialPractice
   result: MagazineBoxSpecialPractice
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Plastic: 1200
@@ -86,8 +77,7 @@
 - type: latheRecipe
   id: MagazineBoxSpecialIncendiary
   result: MagazineBoxSpecialIncendiary
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Plastic: 1250
@@ -95,8 +85,7 @@
 - type: latheRecipe
   id: MagazineBoxSpecialUranium
   result: MagazineBoxSpecialUranium
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Plastic: 1250
@@ -105,8 +94,7 @@
 - type: latheRecipe
   id: MagazineBoxSpecialMindbreaker
   result: MagazineBoxSpecialMindbreaker
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Plastic: 1250
@@ -132,8 +120,7 @@
 - type: latheRecipe
   id: WeaponEnergyGun
   result: WeaponEnergyGun
-  categories:
-  - Weapons
+  category: Weapons
   completetime: 8
   materials:
     Steel: 2000
@@ -143,8 +130,7 @@
 - type: latheRecipe
   id: WeaponEnergyGunMini
   result: WeaponEnergyGunMini
-  categories:
-  - Weapons
+  category: Weapons
   completetime: 4
   materials:   #Half of Energy Gun Recipe
     Steel: 1000
@@ -154,8 +140,7 @@
 - type: latheRecipe
   id: WeaponEnergyGunPistol
   result: WeaponEnergyGunPistol
-  categories:
-  - Weapons
+  category: Weapons
   completetime: 10
   materials:
     Steel: 1500
@@ -166,8 +151,7 @@
 - type: latheRecipe
   id: WeaponGunLaserCarbineAutomatic
   result: WeaponGunLaserCarbineAutomatic
-  categories:
-  - Weapons
+  category: Weapons
   completetime: 15
   materials:
     Steel: 2000

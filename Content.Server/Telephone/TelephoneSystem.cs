@@ -7,12 +7,8 @@ using Content.Server.Speech;
 using Content.Server.Speech.Components;
 using Content.Shared.Chat;
 using Content.Shared.Database;
-using Content.Shared.Labels.Components;
-using Content.Server.Language;
 using Content.Shared.Mind.Components;
 using Content.Shared.Power;
-using Content.Shared.Silicons.StationAi;
-using Content.Shared.Silicons.Borgs.Components;
 using Content.Shared.Speech;
 using Content.Shared.Telephone;
 using Robust.Server.GameObjects;
@@ -23,6 +19,9 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Replays;
 using System.Linq;
+using Content.Shared.Silicons.StationAi;
+using Content.Shared.Silicons.Borgs.Components;
+using Content.Server.Language;
 
 namespace Content.Server.Telephone;
 
@@ -202,7 +201,7 @@ public sealed class TelephoneSystem : SharedTelephoneSystem
 
     private bool TryCallTelephone(Entity<TelephoneComponent> source, Entity<TelephoneComponent> receiver, EntityUid user, TelephoneCallOptions? options = null)
     {
-        if (!IsSourceAbleToReachReceiver(source, receiver) && options?.IgnoreRange != true)
+        if (!IsSourceAbleToReachReceiver(source, receiver))
             return false;
 
         if (IsTelephoneEngaged(receiver) &&
@@ -223,14 +222,7 @@ public sealed class TelephoneSystem : SharedTelephoneSystem
         source.Comp.Muted = options?.MuteSource == true;
 
         var callerInfo = GetNameAndJobOfCallingEntity(user);
-
-        // Base the name of the device on its label
-        string? deviceName = null;
-
-        if (TryComp<LabelComponent>(source, out var label))
-            deviceName = label.CurrentLabel;
-
-        receiver.Comp.LastCallerId = (callerInfo.Item1, callerInfo.Item2, deviceName); // This will be networked when the state changes
+        receiver.Comp.LastCallerId = (callerInfo.Item1, callerInfo.Item2, Name(source)); // This will be networked when the state changes
         receiver.Comp.LinkedTelephones.Add(source);
         receiver.Comp.Muted = options?.MuteReceiver == true;
 

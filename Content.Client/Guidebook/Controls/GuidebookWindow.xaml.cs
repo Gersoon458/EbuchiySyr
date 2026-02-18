@@ -23,8 +23,6 @@ public sealed partial class GuidebookWindow : FancyWindow, ILinkClickHandler
 
     private readonly ISawmill _sawmill;
 
-    public ProtoId<GuideEntryPrototype> LastEntry;
-
     public GuidebookWindow()
     {
         RobustXamlLoader.Load(this);
@@ -92,8 +90,6 @@ public sealed partial class GuidebookWindow : FancyWindow, ILinkClickHandler
 
             _sawmill.Error($"Failed to parse contents of guide document {entry.Id}.");
         }
-
-        LastEntry = entry.Id;
     }
 
     public void UpdateGuides(

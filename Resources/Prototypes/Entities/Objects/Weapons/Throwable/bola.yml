@@ -16,19 +16,17 @@
     sound: /Audio/Effects/snap.ogg
   - type: Ensnaring
     freeTime: 2.0
-    breakoutTime: 3.5 #all bola should generally be fast to remove
-    walkSpeed: 0.5 #makeshift bola shouldn't slow too much
-    sprintSpeed: 0.5
-    staminaDamage: 20 # WD EDIT: 0 -> 20
+    breakoutTime: 3.5
+    walkSpeed: 0.7
+    sprintSpeed: 0.7
+    staminaDamage: 20 # WD EDIT
     canThrowTrigger: true
     canMoveBreakout: true
-    maxEnsnares: 1
-  - type: LandAtCursor
   - type: LayDownOnCollide # WD EDIT
 
 - type: entity
   id: Bola
-  parent: [BaseBola, BaseSecurityContraband]
+  parent: [BaseBola, BaseRestrictedContraband]
   name: bola
   description: Linked together with some spare cuffs and metal.
   components:
@@ -64,7 +62,7 @@
 
 - type: entity
   id: BolaEnergy
-  parent: [ BaseBola, BaseSecurityContraband ]
+  parent: [ BaseBola, BaseRestrictedContraband ]
   name: energy bola
   description: An advanced hardlight criminal entangling tool. Otherwise known as an expensive piece of string.
   components:
@@ -86,5 +84,6 @@
     tags:
     - SecBeltEquip
     - RiotGrenade
-  - type: Ammo
   # WD EDIT END
+  - type: LandAtCursor
+  - type: Ammo # WWDP

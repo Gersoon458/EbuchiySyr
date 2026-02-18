@@ -2,10 +2,8 @@ using Content.Shared.Effects;
 using Robust.Client.Animations;
 using Robust.Client.GameObjects;
 using Robust.Shared.Animations;
-using Robust.Shared.Collections;
 using Robust.Shared.Player;
 using Robust.Shared.Timing;
-using Robust.Shared.Utility;
 
 namespace Content.Client.Effects;
 
@@ -19,7 +17,6 @@ public sealed class ColorFlashEffectSystem : SharedColorFlashEffectSystem
     /// </summary>
     private const float AnimationLength = 0.30f;
     private const string AnimationKey = "color-flash-effect";
-    private ValueList<EntityUid> _toRemove = new();
 
     public override void Initialize()
     {
@@ -46,28 +43,8 @@ public sealed class ColorFlashEffectSystem : SharedColorFlashEffectSystem
         {
             sprite.Color = component.Color;
         }
-    }
 
-    public override void Update(float frameTime)
-    {
-        base.Update(frameTime);
-
-        var query = AllEntityQuery<ColorFlashEffectComponent>();
-        _toRemove.Clear();
-
-        // Can't use deferred removal on animation completion or it will cause issues.
-        while (query.MoveNext(out var uid, out _))
-        {
-            if (_animation.HasRunningAnimation(uid, AnimationKey))
-                continue;
-
-            _toRemove.Add(uid);
-        }
-
-        foreach (var ent in _toRemove)
-        {
-            RemComp<ColorFlashEffectComponent>(ent);
-        }
+        RemCompDeferred<ColorFlashEffectComponent>(uid);
     }
 
     private Animation? GetDamageAnimation(EntityUid uid, Color color, SpriteComponent? sprite = null, float? animationLength = null)
@@ -104,41 +81,42 @@ public sealed class ColorFlashEffectSystem : SharedColorFlashEffectSystem
         {
             var ent = GetEntity(nent);
 
-            if (Deleted(ent) || !TryComp(ent, out SpriteComponent? sprite))
+            if (Deleted(ent))
             {
                 continue;
             }
 
-            if (!TryComp(ent, out ColorFlashEffectComponent? comp))
+            var player = EnsureComp<AnimationPlayerComponent>(ent);
+
+            // Need to stop the existing animation first to ensure the sprite color is fixed.
+            // Otherwise we might lerp to a red colour instead.
+            if (_animation.HasRunningAnimation(ent, player, AnimationKey))
             {
-#if DEBUG
-                DebugTools.Assert(!_animation.HasRunningAnimation(ent, AnimationKey));
-#endif
+                _animation.Stop(ent, player, AnimationKey);
             }
 
-            _animation.Stop(ent, AnimationKey);
+            if (!TryComp<SpriteComponent>(ent, out var sprite))
+            {
+                continue;
+            }
+
+            // having to check lifestage because trycomp is special needs and may return a component which was shut down via RemCompDeferred.
+            // EnsureComp isn't, but we want to get the Color value stored in the component, and EnsureComp would overwrite it with the default value.
+            if (TryComp<ColorFlashEffectComponent>(ent, out var effect) && effect.LifeStage <= ComponentLifeStage.Running)
+            {
+                sprite.Color = effect.Color;
+            }
+
+
             var animation = GetDamageAnimation(ent, color, sprite, ev.AnimationLength);
 
-            if (animation == null)
-            {
+            if (animation == null)  
                 continue;
-            }
 
-            var targetEv = new GetFlashEffectTargetEvent(ent);
-            RaiseLocalEvent(ent, ref targetEv);
-            ent = targetEv.Target;
+            var comp = EnsureComp<ColorFlashEffectComponent>(ent);
 
-            EnsureComp<ColorFlashEffectComponent>(ent, out comp);
-            comp.NetSyncEnabled = false;
             comp.Color = sprite.Color;
-
-            _animation.Play(ent, animation, AnimationKey);
+            _animation.Play((ent, player), animation, AnimationKey);
         }
     }
 }
-
-/// <summary>
-/// Raised on an entity to change the target for a color flash effect.
-/// </summary>
-[ByRefEvent]
-public record struct GetFlashEffectTargetEvent(EntityUid Target);

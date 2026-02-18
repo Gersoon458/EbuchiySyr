@@ -135,7 +135,7 @@
       jobs:
         - Mime
   items:
-    - ClothingMaskBlushingMime
+    - ClothingMaskSexyMime
 
 # Outer
 - type: loadout

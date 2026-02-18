@@ -139,17 +139,8 @@ public sealed partial class LatheMenu : DefaultWindow
             if (!_prototypeManager.TryIndex(recipe, out var proto))
                 continue;
 
-            // Category filtering
-            if (CurrentCategory != null)
-            {
-                if (proto.Categories.Count <= 0)
-                    continue;
-
-                var validRecipe = proto.Categories.Any(category => category == CurrentCategory);
-
-                if (!validRecipe)
-                    continue;
-            }
+            if (CurrentCategory != null && proto.Category != CurrentCategory)
+                continue;
 
             if (SearchBar.Text.Trim().Length != 0)
             {
@@ -164,8 +155,6 @@ public sealed partial class LatheMenu : DefaultWindow
 
         if (!int.TryParse(AmountLineEdit.Text, out var quantity) || quantity <= 0)
             quantity = 1;
-
-        RecipeCount.Text = Loc.GetString("lathe-menu-recipe-count", ("count", recipesToShow.Count));
 
         var sortedRecipesToShow = recipesToShow.OrderBy(_lathe.GetRecipeName);
         RecipeList.Children.Clear();
@@ -235,22 +224,18 @@ public sealed partial class LatheMenu : DefaultWindow
 
     public void UpdateCategories()
     {
-        // Get categories from recipes
         var currentCategories = new List<ProtoId<LatheCategoryPrototype>>();
         foreach (var recipeId in Recipes)
         {
             var recipe = _prototypeManager.Index(recipeId);
 
-            if (recipe.Categories.Count <= 0)
+            if (recipe.Category == null)
                 continue;
 
-            foreach (var category in recipe.Categories)
-            {
-                if (currentCategories.Contains(category))
-                    continue;
+            if (currentCategories.Contains(recipe.Category.Value))
+                continue;
 
-                currentCategories.Add(category);
-            }
+            currentCategories.Add(recipe.Category.Value);
         }
 
         if (Categories != null && (Categories.Count == currentCategories.Count || !Categories.All(currentCategories.Contains)))

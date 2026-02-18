@@ -102,7 +102,7 @@
   # Don't parent to BaseWeaponShotgun because it differs significantly
   parent: [BaseItem, BaseGunWieldable, BaseSyndicateContraband]
   id: WeaponShotgunBulldog
-  description: An automatic magazine-fed shotgun for close-quarters combat. Kicks like a mule on steroids. Uses .50 shotgun shells.
+  description: It's a magazine-fed shotgun designed for close quarters combat. Uses .50 shotgun shells.
   components:
   - type: Sprite
     sprite: Objects/Weapons/Guns/Shotguns/bulldog.rsi
@@ -257,7 +257,7 @@
     sprite: Objects/Weapons/Guns/Shotguns/db_shotgun_inhands_64x.rsi
   # - type: GunRequiresWield - WD EDIT
   - type: Gun
-    fireRate: 3
+    fireRate: 2
     fireOnDropChance: 0.5
   - type: Wieldable
   - type: BallisticAmmoProvider
@@ -286,10 +286,10 @@
 
 - type: entity
   name: Enforcer
-  parent: [BaseWeaponShotgun, BaseGunWieldable, BaseSecurityContraband]
+  parent: [BaseWeaponShotgun, BaseGunWieldable, BaseRestrictedContraband]
   id: WeaponShotgunEnforcer
-  description: A premium semi-automatic shotgun, and the pride of all security forces. Uses .50 shotgun shells.
-  components: # intend for Enforcer to have wider choke for semi-auto function
+  description: A premium combat shotgun based on the Kammerer design, featuring an upgraded clip capacity. .50 shotgun shells.
+  components:
   - type: Sprite
     sprite: Objects/Weapons/Guns/Shotguns/enforcer.rsi
   - type: Clothing
@@ -324,10 +324,10 @@
 
 - type: entity
   name: Kammerer
-  parent: [BaseWeaponShotgun, BaseGunWieldable, BaseSecurityContraband]
+  parent: [BaseWeaponShotgun, BaseGunWieldable, BaseRestrictedContraband]
   id: WeaponShotgunKammerer
-  description: An old yet faithful design, and a favorite among irregular forces of many worlds. Uses .50 shotgun shells.
-  components: # intend for Kammerer to have tighter choke for slower fire rate and/or manual cycling
+  description: When an old Remington design meets modern materials, this is the result. A favourite weapon of militia forces throughout many worlds. Uses .50 shotgun shells.
+  components:
   - type: Item
     # WD EDIT START: Guns resize
     size: Huge
@@ -340,8 +340,13 @@
   - type: Clothing
     sprite: Objects/Weapons/Guns/Shotguns/pump.rsi
   # - type: GunRequiresWield - WD EDIT
-  - type: Gun
-    fireRate: 1
+  - type: BallisticAmmoProvider
+    # WD EDIT START
+    capacity: 7 # 4 -> 7
+    # autoCycle: false
+    soundRack:
+      path: /Audio/_White/Guns/shotgun_rack.ogg
+    # WD EDIT END
   - type: Tag
     tags:
     - WeaponShotgunKammerer
@@ -355,10 +360,6 @@
   #       fontSize: 12
   #       color: "#ff4f00"
   #       requireDetailRange: false
-  - type: BallisticAmmoProvider
-    capacity: 7
-    soundRack:
-      path: /Audio/_White/Guns/shotgun_rack.ogg
   # WD EDIT END
 
 - type: entity
@@ -366,7 +367,7 @@
   parent: [ BaseWeaponShotgunSmall, BaseSecurityBartenderContraband ] # WD EDIT: BaseWeaponShotgun -> BaseWeaponShotgunSmall
   id: WeaponShotgunSawn
   description: Groovy! Uses .50 shotgun shells.
-  components: # needs to be super inaccurate because you don't need to wield it
+  components:
   - type: Sprite
     sprite: DeltaV/Objects/Weapons/Guns/Shotguns/sawn.rsi # Delta-V
   - type: Clothing
@@ -379,7 +380,7 @@
     # WD EDIT END
     sprite: Objects/Weapons/Guns/Shotguns/sawn_inhands_64x.rsi
   - type: Gun
-    fireRate: 3
+    fireRate: 4
     fireOnDropChance: 0.5
     shotgunSpreadMultiplier: 3
     damageModifier: 1.5

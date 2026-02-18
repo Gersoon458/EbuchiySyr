@@ -1,7 +1,7 @@
 - type: marking
   id: UndershirtDefault
-  bodyPart: UndergarmentTop
-  markingCategory: UndergarmentTop
+  bodyPart: Undershirt
+  markingCategory: Undershirt
   speciesRestriction: [Dwarf, Human, Reptilian, Arachnid, SlimePerson, Diona, Moth, Harpy, Tajaran, Oni, Felinid, Chitinid, IPC, Vulpkanin, Shadowkin, Arachne]
   coloring:
     default:
@@ -14,8 +14,8 @@
 
 - type: marking
   id: UndershirtRolled
-  bodyPart: UndergarmentTop
-  markingCategory: UndergarmentTop
+  bodyPart: Undershirt
+  markingCategory: Undershirt
   speciesRestriction: [Dwarf, Human, Reptilian, Arachnid, SlimePerson, Diona, Moth, Harpy, Tajaran, Oni, Felinid, Chitinid, IPC, Vulpkanin, Shadowkin, Arachne]
   coloring:
     default:
@@ -28,8 +28,8 @@
 
 - type: marking
   id: UndershirtSleeveless
-  bodyPart: UndergarmentTop
-  markingCategory: UndergarmentTop
+  bodyPart: Undershirt
+  markingCategory: Undershirt
   speciesRestriction: [Dwarf, Human, Reptilian, Arachnid, SlimePerson, Diona, Moth, Harpy, Tajaran, Oni, Felinid, Chitinid, IPC, Vulpkanin, Shadowkin, Arachne]
   coloring:
     default:
@@ -42,8 +42,8 @@
 
 - type: marking
   id: UndershirtRolledSleeveless
-  bodyPart: UndergarmentTop
-  markingCategory: UndergarmentTop
+  bodyPart: Undershirt
+  markingCategory: Undershirt
   speciesRestriction: [Dwarf, Human, Reptilian, Arachnid, SlimePerson, Diona, Moth, Harpy, Tajaran, Oni, Felinid, Chitinid, IPC, Vulpkanin, Shadowkin, Arachne]
   coloring:
     default:
@@ -56,8 +56,8 @@
 
 - type: marking
   id: UndershirtGrossSleeveless
-  bodyPart: UndergarmentTop
-  markingCategory: UndergarmentTop
+  bodyPart: Undershirt
+  markingCategory: Undershirt
   speciesRestriction: [Dwarf, Human, Reptilian, Arachnid, SlimePerson, Diona, Moth, Harpy, Tajaran, Oni, Felinid, Chitinid, IPC, Vulpkanin, Shadowkin, Arachne]
   coloring:
     default:
@@ -70,8 +70,8 @@
 
 - type: marking
   id: UndershirtNanotrasen
-  bodyPart: UndergarmentTop
-  markingCategory: UndergarmentTop
+  bodyPart: Undershirt
+  markingCategory: Undershirt
   speciesRestriction: [Dwarf, Human, Reptilian, Arachnid, SlimePerson, Diona, Moth, Harpy, Tajaran, Oni, Felinid, Chitinid, IPC, Vulpkanin, Shadowkin, Arachne]
   coloring:
     default:
@@ -84,8 +84,8 @@
 
 - type: marking
   id: UndershirtBinder
-  bodyPart: UndergarmentTop
-  markingCategory: UndergarmentTop
+  bodyPart: Undershirt
+  markingCategory: Undershirt
   speciesRestriction: [Dwarf, Human, Reptilian, Arachnid, SlimePerson, Diona, Moth, Harpy, Tajaran, Oni, Felinid, Chitinid, IPC, Vulpkanin, Shadowkin, Arachne]
   coloring:
     default:
@@ -98,8 +98,8 @@
 
 - type: marking
   id: UndershirtBraClassic
-  bodyPart: UndergarmentTop
-  markingCategory: UndergarmentTop
+  bodyPart: Undershirt
+  markingCategory: Undershirt
   speciesRestriction: [Dwarf, Human, Reptilian, Arachnid, SlimePerson, Diona, Moth, Harpy, Tajaran, Oni, Felinid, Chitinid, IPC, Vulpkanin, Shadowkin, Arachne]
   coloring:
     default:
@@ -112,8 +112,8 @@
 
 - type: marking
   id: UndershirtBraSports
-  bodyPart: UndergarmentTop
-  markingCategory: UndergarmentTop
+  bodyPart: Undershirt
+  markingCategory: Undershirt
   speciesRestriction: [Dwarf, Human, Reptilian, Arachnid, SlimePerson, Diona, Moth, Harpy, Tajaran, Oni, Felinid, Chitinid, IPC, Vulpkanin, Shadowkin, Arachne]
   coloring:
     default:
@@ -126,8 +126,8 @@
 
 - type: marking
   id: UndershirtBraStrapless
-  bodyPart: UndergarmentTop
-  markingCategory: UndergarmentTop
+  bodyPart: Undershirt
+  markingCategory: Undershirt
   speciesRestriction: [Dwarf, Human, Reptilian, Arachnid, SlimePerson, Diona, Moth, Harpy, Tajaran, Oni, Felinid, Chitinid, IPC, Vulpkanin, Shadowkin, Arachne]
   coloring:
     default:

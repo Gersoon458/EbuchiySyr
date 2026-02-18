@@ -3,8 +3,7 @@
 - type: latheRecipe
   abstract: true
   id: BaseMechPartRecipe
-  categories:
-  - Mech
+  category: Mech
   completetime: 10
 
 # Recipes
@@ -14,8 +13,7 @@
   parent: BaseMechPartRecipe
   id: RipleyHarness
   result: RipleyHarness
-  categories:
-  - Ripley # Goobstation
+  category: Ripley # Goobstation
   materials:
     Steel: 1500
     Glass: 1200
@@ -24,8 +22,7 @@
   parent: BaseMechPartRecipe
   id: RipleyLArm
   result: RipleyLArm
-  categories:
-  - Ripley # Goobstation
+  category: Ripley # Goobstation
   materials:
     Steel: 1000
     Glass: 750
@@ -34,29 +31,25 @@
   parent: RipleyLArm
   id: RipleyLLeg
   result: RipleyLLeg
-  categories:
-  - Ripley # Goobstation
+  category: Ripley # Goobstation
 
 - type: latheRecipe
   parent: RipleyLLeg
   id: RipleyRLeg
   result: RipleyRLeg
-  categories:
-  - Ripley # Goobstation
+  category: Ripley # Goobstation
 
 - type: latheRecipe
   parent: RipleyLArm
   id: RipleyRArm
   result: RipleyRArm
-  categories:
-  - Ripley # Goobstation
+  category: Ripley # Goobstation
 
 - type: latheRecipe
   parent: BaseMechPartRecipe
   id: MechEquipmentGrabber
   result: MechEquipmentGrabber
-  categories:
-  - MechEquipment
+  category: MechEquipment
   materials:
     Steel: 1000
     Glass: 750
@@ -66,8 +59,7 @@
   parent: BaseMechPartRecipe
   id: HonkerHarness
   result: HonkerHarness
-  categories:
-  - Honker # Goobstation
+  category: Honker # Goobstation
   materials:
     Steel: 3000
     Glass: 1200
@@ -77,8 +69,7 @@
   parent: BaseMechPartRecipe
   id: HonkerLArm
   result: HonkerLArm
-  categories:
-  - Honker # Goobstation
+  category: Honker # Goobstation
   materials:
     Steel: 3000
     Glass: 1200
@@ -88,29 +79,25 @@
   parent: HonkerLArm
   id: HonkerLLeg
   result: HonkerLLeg
-  categories:
-  - Honker # Goobstation
+  category: Honker # Goobstation
 
 - type: latheRecipe
   parent: HonkerLLeg
   id: HonkerRLeg
   result: HonkerRLeg
-  categories:
-  - Honker # Goobstation
+  category: Honker # Goobstation
 
 - type: latheRecipe
   parent: HonkerLArm
   id: HonkerRArm
   result: HonkerRArm
-  categories:
-  - Honker # Goobstation
+  category: Honker # Goobstation
 
 - type: latheRecipe
   parent: BaseMechPartRecipe
   id: MechEquipmentHorn
   result: MechEquipmentHorn
-  categories:
-  - MechEquipment # Goobstation
+  category: MechEquipment # Goobstation
   completetime: 10
   materials:
     Steel: 3000
@@ -122,8 +109,7 @@
   parent: BaseMechPartRecipe
   id: HamtrHarness
   result: HamtrHarness
-  categories:
-  - Hamptr # Goobstation
+  category: Hamptr # Goobstation
   materials:
     Steel: 1200
     Glass: 1000
@@ -132,8 +118,7 @@
   parent: BaseMechPartRecipe
   id: HamtrLArm
   result: HamtrLArm
-  categories:
-  - Hamptr # Goobstation
+  category: Hamptr # Goobstation
   materials:
     Steel: 800
     Glass: 600
@@ -142,29 +127,25 @@
   parent: HamtrLArm
   id: HamtrLLeg
   result: HamtrLLeg
-  categories:
-  - Hamptr # Goobstation
+  category: Hamptr # Goobstation
 
 - type: latheRecipe
   parent: HamtrLLeg
   id: HamtrRLeg
   result: HamtrRLeg
-  categories:
-  - Hamptr # Goobstation
+  category: Hamptr # Goobstation
 
 - type: latheRecipe
   parent: HamtrLArm
   id: HamtrRArm
   result: HamtrRArm
-  categories:
-  - Hamptr # Goobstation
+  category: Hamptr # Goobstation
 
 - type: latheRecipe
   parent: BaseMechPartRecipe
   id: MechEquipmentGrabberSmall
   result: MechEquipmentGrabberSmall
-  categories:
-  - MechEquipment # Goobstation
+  category: MechEquipment # Goobstation
   materials:
     Steel: 400
     Plastic: 100
@@ -174,8 +155,7 @@
   parent: BaseMechPartRecipe
   id: VimHarness
   result: VimHarness
-  categories:
-  - MechEquipment # Goobstation
+  category: MechEquipment # Goobstation
   completetime: 5
   materials:
     Steel: 400

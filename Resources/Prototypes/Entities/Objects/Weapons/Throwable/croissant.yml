@@ -1,6 +1,8 @@
 - type: entity
   parent: FoodBakedCroissant
   id: WeaponCroissant
+  name: croissant
+  description: Buttery, flaky goodness.
   suffix: Weapon
   components:
   - type: Fixtures
@@ -17,10 +19,7 @@
     sound: /Audio/Weapons/star_hit.ogg
   - type: LandAtCursor
   - type: DamageOtherOnHit
-    ignoreResistances: true
     damage:
       types:
         Slash: 5
         Piercing: 10
-  - type: ThrowingAngle
-    angularVelocity: true # spins

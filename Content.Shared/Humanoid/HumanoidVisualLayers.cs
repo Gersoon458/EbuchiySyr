@@ -6,15 +6,14 @@ namespace Content.Shared.Humanoid
     [Serializable, NetSerializable]
     public enum HumanoidVisualLayers : byte
     {
-        Special, // for the cat ears
         Face,
         Tail,
         Wings,
         Hair,
         FacialHair,
-        UndergarmentTop,
-        UndergarmentBottom,
         Chest,
+        Underwear,
+        Undershirt,
         Head,
         Snout,
         HeadSide, // side parts (i.e., frills)

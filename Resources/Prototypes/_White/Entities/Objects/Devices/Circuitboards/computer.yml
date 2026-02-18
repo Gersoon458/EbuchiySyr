@@ -5,13 +5,3 @@
   components:
   - type: ComputerBoard
     prototype: ComputerRemoteControl
-
-- type: entity
-  parent: BaseComputerCircuitboard
-  id: RadarWideConsoleCircuitboard
-  name: wide radar console computer board
-  components:
-  - type: Sprite
-    state: cpu_supply
-  - type: ComputerBoard
-    prototype: ComputerRadarWide

@@ -28,8 +28,6 @@
   parent: BaseMobConstructArtificer
   components:
   - type: BloodCultist
-  - type: AnimateOnStartup
-    animation: MobSpawnConstruct
 
 - type: entity
   id: MobConstructArtificerHoly
@@ -42,5 +40,3 @@
   - type: ActionGrant
     actions:
     - ActionBloodCultSummonHolySoulStone
-  - type: AnimateOnStartup
-    animation: MobSpawnConstructHoly

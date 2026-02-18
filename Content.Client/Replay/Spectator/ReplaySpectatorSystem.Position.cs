@@ -170,11 +170,10 @@ public sealed partial class ReplaySpectatorSystem
         {
             var size = grid.LocalAABB.Size.LengthSquared();
 
-            var station = HasComp<StationMemberComponent>(uid);
-
-            //We want the first station grid to overwrite any previous non-station grids no matter the size, in case the vgroid was found first
-            if (maxSize is not null && size < maxSize && !(!stationFound && station))
+            if (maxSize is not null && size < maxSize)
                 continue;
+
+            var station = HasComp<StationMemberComponent>(uid);
 
             if (!station && stationFound)
                continue;
@@ -184,6 +183,7 @@ public sealed partial class ReplaySpectatorSystem
 
             if (station)
                 stationFound = true;
+
         }
 
         coords = new EntityCoordinates(maxUid ?? default, default);

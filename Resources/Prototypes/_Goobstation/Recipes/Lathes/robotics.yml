@@ -1,8 +1,7 @@
 - type: latheRecipe
   id: ModsuitChestplate
   result: ModsuitChestplate
-  categories:
-  - Modsuit
+  category: Modsuit
   completetime: 5
   materials:
     Steel: 250
@@ -10,8 +9,7 @@
 - type: latheRecipe
   id: ModsuitBoots
   result: ModsuitBoots
-  categories:
-  - Modsuit
+  category: Modsuit
   completetime: 5
   materials:
     Steel: 250
@@ -19,8 +17,7 @@
 - type: latheRecipe
   id: ModsuitHelmet
   result: ModsuitHelmet
-  categories:
-  - Modsuit
+  category: Modsuit
   completetime: 5
   materials:
     Steel: 250
@@ -28,8 +25,7 @@
 - type: latheRecipe
   id: ModsuitGauntlets
   result: ModsuitGauntlets
-  categories:
-  - Modsuit
+  category: Modsuit
   completetime: 5
   materials:
     Steel: 250
@@ -37,8 +33,7 @@
 - type: latheRecipe
   id: ModsuitShell
   result: ModsuitShell
-  categories:
-  - Modsuit
+  category: Modsuit
   completetime: 5
   materials:
     Steel: 500
@@ -47,8 +42,7 @@
 - type: latheRecipe
   id: ModsuitPlatingExternal
   result: ModsuitPlatingExternal
-  categories:
-  - Modsuit
+  category: Modsuit
   completetime: 5
   materials:
     Steel: 300

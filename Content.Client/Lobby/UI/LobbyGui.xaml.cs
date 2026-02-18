@@ -39,7 +39,7 @@ namespace Content.Client.Lobby.UI
                     // WD EDIT START
                     CharacterSetupState.Visible = false;
                     Center.Visible = true;
-                    ServerName.Visible = true;
+                    LabelName.Visible = true;
                     LobbySong.Visible = true;
                     LobbyBackground.Visible = true;
                     BottomLeftPanel.Visible = true;
@@ -51,7 +51,7 @@ namespace Content.Client.Lobby.UI
                     // WD EDIT START
                     Center.Visible = false;
                     RightSide.Visible = false;
-                    ServerName.Visible = false;
+                    LabelName.Visible = false;
                     LobbySong.Visible = false;
                     LobbyBackground.Visible = false;
                     BottomLeftPanel.Visible = false;

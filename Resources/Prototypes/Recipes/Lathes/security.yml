@@ -3,8 +3,7 @@
 - type: latheRecipe
   abstract: true
   id: BaseWeaponRecipe
-  categories:
-  - Weapons
+  category: Weapons
   completetime: 2
   materials:
     Steel: 300
@@ -19,8 +18,7 @@
 - type: latheRecipe
   abstract: true
   id: BaseAmmoRecipe
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
 
 - type: latheRecipe
@@ -275,8 +273,7 @@
 - type: latheRecipe
   id: WeaponSubMachineGunFPA90
   result: WeaponSubMachineGunFPA90
-  categories:
-  - Weapons
+  category: Weapons
   completetime: 6
   materials:
     Aluminum: 2000
@@ -286,8 +283,7 @@
 - type: latheRecipe
   id: WeaponSubMachineGunBRDIR25
   result: WeaponSubMachineGunBRDIR25
-  categories:
-  - Weapons
+  category: Weapons
   completetime: 6
   materials:
     Aluminum: 2500
@@ -300,8 +296,7 @@
 - type: latheRecipe
   id: WeaponPistolMk58
   result: WeaponPistolMk58Empty
-  categories:
-  - Weapons
+  category: Weapons
   completetime: 6
   materials:
     Aluminum: 800
@@ -311,8 +306,7 @@
 - type: latheRecipe
   id: WeaponPistolN1984
   result: WeaponPistolN1984Empty
-  categories:
-  - Weapons
+  category: Weapons
   completetime: 6
   materials:
     Steel: 800 #Yes, Steel and not Aluminum, the original M1911 handguns that this is in reference to are steel frame.
@@ -325,8 +319,7 @@
 - type: latheRecipe
   id: WeaponPistolUniversal
   result: WeaponPistolUniversalEmpty
-  categories:
-  - Weapons
+  category: Weapons
   completetime: 7
   materials: #mk 32 is a straight upgrade to N1984 so simply bumping up the material price.
     Steel: 1000
@@ -338,8 +331,7 @@
 - type: latheRecipe
   id: WeaponPistolViper
   result: WeaponPistolViperEmpty
-  categories:
-  - Weapons
+  category: Weapons
   completetime: 6
   materials:
     Aluminum: 900
@@ -350,8 +342,7 @@
 - type: latheRecipe
   id: WeaponPistolCobra
   result: WeaponPistolCobraEmpty
-  categories:
-  - Weapons
+  category: Weapons
   completetime: 6
   materials:
     Aluminum: 600
@@ -445,8 +436,7 @@
 - type: latheRecipe
   id: CartridgeLightRifleIncendiary
   result: CartridgeLightRifleIncendiary
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 2
   materials:
     Plastic: 20
@@ -454,8 +444,7 @@
 - type: latheRecipe
   id: CartridgeLightRifleUranium
   result: CartridgeLightRifleUranium
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 2
   materials:
     Plastic: 20
@@ -466,8 +455,7 @@
 - type: latheRecipe
   id: CartridgeMagnumIncendiary
   result: CartridgeMagnumIncendiary
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 2
   materials:
     Plastic: 20
@@ -475,8 +463,7 @@
 - type: latheRecipe
   id: CartridgeMagnumUranium
   result: CartridgeMagnumUranium
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 2
   materials:
     Plastic: 20
@@ -487,8 +474,7 @@
 - type: latheRecipe
   id: CartridgePistolIncendiary
   result: CartridgePistolIncendiary
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 2
   materials:
     Plastic: 10
@@ -496,8 +482,7 @@
 - type: latheRecipe
   id: CartridgePistolUranium
   result: CartridgePistolUranium
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 2
   materials:
     Plastic: 5
@@ -508,8 +493,7 @@
 - type: latheRecipe
   id: CartridgeRifleIncendiary
   result: CartridgeRifleIncendiary
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 2
   materials:
     Plastic: 15
@@ -517,8 +501,7 @@
 - type: latheRecipe
   id: CartridgeRifleUranium
   result: CartridgeRifleUranium
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 2
   materials:
     Plastic: 15
@@ -529,8 +512,7 @@
 - type: latheRecipe
   id: ShellShotgun
   result: ShellShotgun
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 2
   materials:
     Steel: 20
@@ -538,8 +520,7 @@
 - type: latheRecipe
   id: ShellShotgunFlare
   result: ShellShotgunFlare
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 2
   materials:
     Plastic: 20
@@ -548,8 +529,7 @@
 - type: latheRecipe
   id: ShellShotgunLumen
   result: ShellShotgunLumen
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 2
   materials:
     Plastic: 20
@@ -559,8 +539,7 @@
 - type: latheRecipe
   id: ShellShotgunPractice
   result: ShellShotgunPractice
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 2
   materials:
     Plastic: 20
@@ -575,8 +554,7 @@
 - type: latheRecipe
   id: ShellShotgunUranium
   result: ShellShotgunUranium
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 2
   materials:
     Plastic: 15
@@ -681,8 +659,7 @@
 - type: latheRecipe
   id: MagazineLightRifleShrapnel
   result: MagazineLightRifleShrapnel
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Steel: 565
@@ -701,8 +678,7 @@
 - type: latheRecipe
   id: MagazineMagnum
   result: MagazineMagnum
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Steel: 150
@@ -710,8 +686,7 @@
 - type: latheRecipe
   id: MagazineMagnumEmpty
   result: MagazineMagnumEmpty
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Steel: 30
@@ -719,8 +694,7 @@
 - type: latheRecipe
   id: MagazineMagnumIncendiary
   result: MagazineMagnumIncendiary
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Steel: 30
@@ -729,8 +703,7 @@
 - type: latheRecipe
   id: MagazineMagnumShrapnel
   result: MagazineMagnumShrapnel
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Steel: 150
@@ -738,8 +711,7 @@
 - type: latheRecipe
   id: MagazineMagnumUranium
   result: MagazineMagnumUranium
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Steel: 30
@@ -761,8 +733,7 @@
 - type: latheRecipe
   id: MagazinePistolIncendiary
   result: MagazinePistolIncendiary
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Steel: 25
@@ -778,8 +749,7 @@
 - type: latheRecipe
   id: MagazinePistolShrapnel
   result: MagazinePistolShrapnel
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Steel: 145
@@ -828,8 +798,7 @@
 - type: latheRecipe
   id: MagazinePistolSubMachineGunIncendiary
   result: MagazinePistolSubMachineGunIncendiary
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Steel: 25
@@ -838,8 +807,7 @@
 - type: latheRecipe
   id: MagazinePistolSubMachineGunShrapnel
   result: MagazinePistolSubMachineGunShrapnel
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Steel: 300
@@ -861,8 +829,7 @@
 - type: latheRecipe
   id: MagazinePistolSubMachineGunUranium
   result: MagazinePistolSubMachineGunUranium
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Steel: 30
@@ -903,8 +870,7 @@
 - type: latheRecipe
   id: MagazineRifleShrapnel
   result: MagazineRifleShrapnel
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Steel: 375
@@ -923,8 +889,7 @@
 - type: latheRecipe
   id: MagazineLightRifleMarkOne
   result: MagazineLightRifleMarkOne
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 2
   materials:
     Steel: 200
@@ -932,8 +897,7 @@
 - type: latheRecipe
   id: MagazineLightRifleMarkOneEmpty
   result: MagazineLightRifleMarkOneEmpty
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 2
   materials:
     Steel: 100
@@ -983,8 +947,7 @@
 - type: latheRecipe
   id: MagazineUniversalMagnum
   result: MagazineUniversalMagnum
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Steel: 200
@@ -992,8 +955,7 @@
 - type: latheRecipe
   id: MagazineUniversalMagnumEmpty
   result: MagazineUniversalMagnumEmpty
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Steel: 40
@@ -1001,8 +963,7 @@
 - type: latheRecipe
   id: MagazineUniversalMagnumIncendiary
   result: MagazineUniversalMagnumIncendiary
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Steel: 40
@@ -1011,8 +972,7 @@
 - type: latheRecipe
   id: MagazineUniversalMagnumShrapnel
   result: MagazineUniversalMagnumShrapnel
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Steel: 200
@@ -1020,8 +980,7 @@
 - type: latheRecipe
   id: MagazineUniversalMagnumUranium
   result: MagazineUniversalMagnumUranium
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Steel: 40
@@ -1135,8 +1094,7 @@
 - type: latheRecipe
   id: MagazineBoxLightRifleShrapnel
   result: MagazineBoxLightRifleShrapnel
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Steel: 1800
@@ -1175,8 +1133,7 @@
 - type: latheRecipe
   id: MagazineBoxMagnumShrapnel
   result: MagazineBoxMagnumShrapnel
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Steel: 1250
@@ -1215,8 +1172,7 @@
 - type: latheRecipe
   id: MagazineBoxPistolShrapnel
   result: MagazineBoxPistolShrapnel
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Steel: 650
@@ -1255,8 +1211,7 @@
 - type: latheRecipe
   id: MagazineBoxRifleShrapnel
   result: MagazineBoxRifleShrapnel
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Steel: 950
@@ -1289,8 +1244,7 @@
 - type: latheRecipe
   id: BoxShellTranquilizer
   result: BoxShellTranquilizer
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Plastic: 240
@@ -1302,8 +1256,7 @@
 - type: latheRecipe
   id: BoxShotgun00Buckshot
   result: BoxShotgun00Buckshot
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Steel: 320
@@ -1311,8 +1264,7 @@
 - type: latheRecipe
   id: BoxShotgun0000Buckshot
   result: BoxShotgun0000Buckshot
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Steel: 320
@@ -1320,8 +1272,7 @@
 - type: latheRecipe
   id: BoxShotgunBirdshot
   result: BoxShotgunBirdshot
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Steel: 320
@@ -1345,8 +1296,7 @@
 - type: latheRecipe
   id: BoxShotgunLumen
   result: BoxShotgunLumen
-  categories:
-  - Ammo
+  category: Ammo
   completetime: 5
   materials:
     Steel: 80

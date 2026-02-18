@@ -3,8 +3,7 @@
 - type: latheRecipe
   abstract: true
   id: BaseElectronicsRecipe
-  categories:
-  - Circuitry
+  category: Circuitry
   completetime: 2
   materials:
     Steel: 100
@@ -633,8 +632,7 @@
 - type: latheRecipe
   id: DroneElectronics
   result: DroneElectronics
-  categories:
-  - Circuitry
+  category: Circuitry
   completetime: 2
   materials:
     Steel: 1000

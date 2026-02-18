@@ -31,8 +31,6 @@
   parent: BaseMobConstructWraith
   components:
   - type: BloodCultist
-  - type: AnimateOnStartup
-    animation: MobSpawnConstruct
 
 - type: entity
   id: MobConstructWraithHoly
@@ -40,6 +38,3 @@
   - BaseMobConstructHoly
   - BaseMobConstructWraith
   name: purified wraith
-  components:
-  - type: AnimateOnStartup
-    animation: MobSpawnConstructHoly
