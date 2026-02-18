@@ -1,8 +1,9 @@
 using System.Numerics;
 using Content.Shared.IconSmoothing;
 using Robust.Client.GameObjects;
-using System.Linq; // WWDP edit
-using System.Collections.Generic; // WWDP edit
+using Robust.Shared.Map;
+using Robust.Shared.Map.Components;
+using System.Linq;
 
 namespace Content.Client.IconSmoothing;
 
@@ -21,7 +22,7 @@ public sealed partial class IconSmoothSystem
         if (!TryComp<SpriteComponent>(uid, out var sprite))
             return;
 
-        // WWDPEdit Start
+        // 8-direction offsets
         var edgeOffsets = new Dictionary<EdgeLayer, Vector2>
         {
             { EdgeLayer.South, new Vector2(0, -1f) },
@@ -42,21 +43,19 @@ public sealed partial class IconSmoothSystem
                 sprite.LayerSetVisible(edgeLayer, false);
             }
         }
-        // WWDP Edit End
     }
 
     private void OnEdgeShutdown(EntityUid uid, SmoothEdgeComponent component, ComponentShutdown args)
     {
         if (!TryComp<SpriteComponent>(uid, out var sprite))
             return;
-        // WWDP Edit Start
+
         var allEdgeLayers = Enum.GetValues<EdgeLayer>();
         foreach (var edgeLayer in allEdgeLayers)
         {
             if (sprite.LayerMapTryGet(edgeLayer, out _))
                 sprite.LayerMapRemove(edgeLayer);
         }
-        // WWDP Edit End
     }
 
     private void CalculateEdge(EntityUid uid, DirectionFlag directions, SpriteComponent? sprite = null, SmoothEdgeComponent? component = null)
@@ -65,23 +64,26 @@ public sealed partial class IconSmoothSystem
             return;
 
         if (component.DrawDepth.HasValue)
-        {
             sprite.DrawDepth = component.DrawDepth.Value;
-        }
 
         var xform = Transform(uid);
-        if (!TryComp<Robust.Shared.Map.Components.MapGridComponent>(xform.GridUid, out var grid))
+        if (!TryComp<MapGridComponent>(xform.GridUid, out var grid))
             return;
 
-        var pos = grid.TileIndicesFor(xform.Coordinates);
+        var pos = _mapSystem.TileIndicesFor(xform.GridUid.Value, grid, xform.Coordinates);
         var smoothQuery = GetEntityQuery<IconSmoothComponent>();
 
+        // All 8 directions
         var directionMappings = new[]
         {
             (DirectionFlag.South, EdgeLayer.South),
             (DirectionFlag.East, EdgeLayer.East),
             (DirectionFlag.North, EdgeLayer.North),
-            (DirectionFlag.West, EdgeLayer.West)
+            (DirectionFlag.West, EdgeLayer.West),
+            (DirectionFlag.SouthEast, EdgeLayer.SouthEast),
+            (DirectionFlag.NorthEast, EdgeLayer.NorthEast),
+            (DirectionFlag.NorthWest, EdgeLayer.NorthWest),
+            (DirectionFlag.SouthWest, EdgeLayer.SouthWest)
         };
 
         foreach (var (dir, edge) in directionMappings)
@@ -105,11 +107,10 @@ public sealed partial class IconSmoothSystem
                 }
             }
 
-            // Для RequireMatchingKey = true показываем только при наличии совпадения
-            // Для RequireMatchingKey = false показываем при отсутствии соседей (старая логика)
-            var shouldShowEdge = component.RequireMatchingKey ?
-                hasMatchingNeighbor :
-                !hasMatchingNeighbor;
+            // If RequireMatchingKey: show edge only when neighbor matches; otherwise show when no match (legacy)
+            var shouldShowEdge = component.RequireMatchingKey
+                ? hasMatchingNeighbor
+                : !hasMatchingNeighbor;
 
             sprite.LayerSetVisible(layerIndex, shouldShowEdge);
         }
@@ -117,16 +118,13 @@ public sealed partial class IconSmoothSystem
 
     private bool MatchesEdgeCriteria(SmoothEdgeComponent edge, IconSmoothComponent neighbor)
     {
-        // Если RequireMatchingKey не установлен, используем старую логику
         if (!edge.RequireMatchingKey)
-            return true; // Всегда показываем edge для обычных сущностей
+            return true; // legacy: always show edge
 
-        // Новая логика для условных edge-спрайтов
-        if (edge.EdgeSubKeys == null || neighbor.SmoothKey == null)
+        if (neighbor.SmoothKey == null)
             return false;
 
-        return edge.EdgeSubKeys.Any(subKey =>
-            !string.IsNullOrEmpty(subKey) && neighbor.SmoothKey == subKey);
+        return edge.EdgeAdditionalKeys.Contains(neighbor.SmoothKey);
     }
 
     private Vector2i DirectionToOffset(DirectionFlag direction)
@@ -147,27 +145,18 @@ public sealed partial class IconSmoothSystem
 
     private EdgeLayer GetEdge(DirectionFlag direction)
     {
-        switch (direction)
+        return direction switch
         {
-            case DirectionFlag.South:
-                return EdgeLayer.South;
-            case DirectionFlag.East:
-                return EdgeLayer.East;
-            case DirectionFlag.North:
-                return EdgeLayer.North;
-            case DirectionFlag.West:
-                return EdgeLayer.West;
-            default:
-                // WWDP Edit Start
-                if (Enum.IsDefined(typeof(EdgeLayer), "SouthEast"))
-                {
-                    var dirName = direction.ToString();
-                    if (Enum.TryParse<EdgeLayer>(dirName, out var edgeLayer))
-                        return edgeLayer;
-                }
-                // WWDP Edit End
-                throw new ArgumentOutOfRangeException();
-        }
+            DirectionFlag.South => EdgeLayer.South,
+            DirectionFlag.East => EdgeLayer.East,
+            DirectionFlag.North => EdgeLayer.North,
+            DirectionFlag.West => EdgeLayer.West,
+            DirectionFlag.SouthEast => EdgeLayer.SouthEast,
+            DirectionFlag.NorthEast => EdgeLayer.NorthEast,
+            DirectionFlag.NorthWest => EdgeLayer.NorthWest,
+            DirectionFlag.SouthWest => EdgeLayer.SouthWest,
+            _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
+        };
     }
 
     private enum EdgeLayer : byte
@@ -176,11 +165,9 @@ public sealed partial class IconSmoothSystem
         East,
         North,
         West,
-        // WWDP Edit Start
         SouthEast,
         NorthEast,
         NorthWest,
         SouthWest
-        // WWDP Edit End
     }
 }

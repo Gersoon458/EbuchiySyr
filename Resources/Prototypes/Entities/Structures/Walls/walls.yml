@@ -996,7 +996,8 @@
         acts: ["Destruction"]
   - type: IconSmooth
     key: walls
-    subKeys: ["airlocks"]
+    additionalKeys:
+    - airlocks
     base: solid
 
 - type: entity
@@ -1005,7 +1006,8 @@
   components:
   - type: SmoothEdge
     requireMatchingKey: true
-    edgeSubKeys: [ "airlocks" ]
+    edgeAdditionalKeys:
+    - airlocks
     drawdepth: -1
   - type: SpriteFade
   - type: Sprite

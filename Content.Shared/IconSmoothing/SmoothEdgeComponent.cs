@@ -8,8 +8,8 @@ namespace Content.Shared.IconSmoothing;
 [RegisterComponent, NetworkedComponent]
 public sealed partial class SmoothEdgeComponent : Component
 {
-    [ViewVariables(VVAccess.ReadWrite), DataField("edgeSubKeys")]
-    public List<string?> EdgeSubKeys { get; set; } = new();
+    [ViewVariables(VVAccess.ReadWrite), DataField("edgeAdditionalKeys")]
+    public List<string> EdgeAdditionalKeys { get; set; } = new();
 
     [ViewVariables(VVAccess.ReadWrite), DataField("requireMatchingKey")]
     public bool RequireMatchingKey = false;
