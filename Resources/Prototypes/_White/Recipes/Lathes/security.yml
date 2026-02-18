@@ -22,7 +22,7 @@
   completetime: 5
   materials:
     Plasteel: 450
-    Steel: 30
+    Steel: 70
 
 - type: latheRecipe
   id: MagazineShotgunBreach
