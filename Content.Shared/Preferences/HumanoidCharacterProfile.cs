@@ -301,8 +301,6 @@ public sealed partial class HumanoidCharacterProfile : ICharacterProfile
             Nationality = SharedHumanoidAppearanceSystem.DefaultNationality,
             Employer = SharedHumanoidAppearanceSystem.DefaultEmployer,
             Lifepath = SharedHumanoidAppearanceSystem.DefaultLifepath,
-            Height = speciesPrototype?.DefaultHeight ?? 1f, // WWDP EDIT
-            Width = speciesPrototype?.DefaultWidth ?? 1f, // WWDP EDIT
         };
     }
 
@@ -371,8 +369,6 @@ public sealed partial class HumanoidCharacterProfile : ICharacterProfile
             Voice = voiceId, // WD EDIT
             BodyType = bodyType, // WD EDIT
             Species = species,
-            Height = speciesPrototype?.DefaultHeight ?? 1f, // WWDP EDIT
-            Width = speciesPrototype?.DefaultWidth ?? 1f, // WWDP EDIT
             Appearance = HumanoidCharacterAppearance.Random(species, sex),
             Nationality = SharedHumanoidAppearanceSystem.DefaultNationality,
             Employer = SharedHumanoidAppearanceSystem.DefaultEmployer,
@@ -535,8 +531,6 @@ public sealed partial class HumanoidCharacterProfile : ICharacterProfile
             // EE - Contractors Change End
             && PreferenceUnavailable == other.PreferenceUnavailable
             && SpawnPriority == other.SpawnPriority
-            && Height == other.Height // WD EDIT
-            && Width == other.Width // WD EDIT
             && _jobPriorities.SequenceEqual(other._jobPriorities)
             && _antagPreferences.SequenceEqual(other._antagPreferences)
             && _traitPreferences.SequenceEqual(other._traitPreferences)
@@ -582,8 +576,6 @@ public sealed partial class HumanoidCharacterProfile : ICharacterProfile
         };
 
         var bodyType = speciesPrototype.BodyTypes.Contains(BodyType) ? BodyType : speciesPrototype.BodyTypes.First(); // WD EDIT
-        var height = Height <= 0 ? speciesPrototype.DefaultHeight : Math.Clamp(Height, speciesPrototype.MinHeight, speciesPrototype.MaxHeight); // WD EDIT
-        var width = Width <= 0 ? speciesPrototype.DefaultWidth : Math.Clamp(Width, speciesPrototype.MinWidth, speciesPrototype.MaxWidth); // WD EDIT
 
         string name;
         if (string.IsNullOrEmpty(Name))
@@ -694,8 +686,6 @@ public sealed partial class HumanoidCharacterProfile : ICharacterProfile
         Sex = sex;
         Gender = gender;
         BodyType = bodyType; // WD EDIT
-        Height = height; // WD EDIT
-        Width = width; // WD EDIT
         Appearance = appearance;
         SpawnPriority = spawnPriority;
 
@@ -835,8 +825,6 @@ public sealed partial class HumanoidCharacterProfile : ICharacterProfile
         hashCode.Add(BodyType); // WD EDIT
         hashCode.Add(BarkVoice); // WD EDIT
         hashCode.Add(BarkSettings); // WD EDIT
-        hashCode.Add(Height); // WWDP EDIT
-        hashCode.Add(Width);  // WWDP EDIT
         hashCode.Add(Appearance);
         hashCode.Add((int) SpawnPriority);
         hashCode.Add((int) PreferenceUnavailable);

@@ -1,10 +1,7 @@
-using Content.Shared._White.CCVar;
 using Content.Shared.Containers.ItemSlots;
-using Content.Shared.Shuttles.BUIStates;
 using Content.Shared.Shuttles.Components;
 using Content.Shared.Shuttles.UI.MapObjects;
 using Content.Shared.Whitelist;
-using Robust.Shared.Configuration;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Physics;
@@ -20,12 +17,9 @@ public abstract partial class SharedShuttleSystem : EntitySystem
     [Dependency] protected readonly SharedMapSystem Maps = default!;
     [Dependency] protected readonly SharedTransformSystem XformSystem = default!;
     [Dependency] private readonly EntityWhitelistSystem _whitelistSystem = default!;
-    [Dependency] private readonly IConfigurationManager _configuration = default!; // WD EDIT
 
-    // WD EDIT START
-    public float FTLRange;
-    public float FTLBufferRange;
-    // WD EDIT END
+    public const float FTLRange = 256f;
+    public const float FTLBufferRange = 8f;
 
     private EntityQuery<MapGridComponent> _gridQuery;
     private EntityQuery<PhysicsComponent> _physicsQuery;
@@ -39,11 +33,6 @@ public abstract partial class SharedShuttleSystem : EntitySystem
         _gridQuery = GetEntityQuery<MapGridComponent>();
         _physicsQuery = GetEntityQuery<PhysicsComponent>();
         _xformQuery = GetEntityQuery<TransformComponent>();
-
-        // WD EDIT START
-        _configuration.OnValueChanged(WhiteCVars.FTLRange, range => FTLRange = range, true);
-        _configuration.OnValueChanged(WhiteCVars.FTLBufferRange, range => FTLBufferRange = range, true);
-        // WD EDIT END
     }
 
     /// <summary>
@@ -181,7 +170,13 @@ public abstract partial class SharedShuttleSystem : EntitySystem
     /// <summary>
     /// Returns true if the spot is free to be FTLd to (not close to any objects and in range).
     /// </summary>
-    public bool FTLFree(EntityUid shuttleUid, EntityCoordinates coordinates, Angle angle, List<ShuttleExclusionObject>? exclusionZones)
+    public bool FTLFree(EntityUid shuttleUid,
+        EntityCoordinates coordinates,
+        Angle angle,
+        List<ShuttleExclusionObject>? exclusionZones,
+        bool travelToPlanets = false,
+        bool ignoreExclusionZones = false,
+        float ftlRange = 512f)
     {
         if (!_physicsQuery.TryGetComponent(shuttleUid, out var shuttlePhysics) ||
             !_xformQuery.TryGetComponent(shuttleUid, out var shuttleXform))
@@ -189,9 +184,12 @@ public abstract partial class SharedShuttleSystem : EntitySystem
             return false;
         }
 
+        if (travelToPlanets && ignoreExclusionZones)
+            return true; // We're skipping both checks anyways so uhhh. Have fun with that.
+
         // Just checks if any grids inside of a buffer range at the target position.
         _grids.Clear();
-        var mapCoordinates = coordinates.ToMap(EntityManager, XformSystem);
+        var mapCoordinates = XformSystem.ToMapCoordinates(coordinates);
 
         var ourPos = Maps.GetGridPosition((shuttleUid, shuttlePhysics, shuttleXform));
 
@@ -199,14 +197,14 @@ public abstract partial class SharedShuttleSystem : EntitySystem
         var targetPosition = mapCoordinates.Position;
 
         // Check range even if it's cross-map.
-        if ((targetPosition - ourPos).Length() > FTLRange)
+        if ((targetPosition - ourPos).Length() > ftlRange)
         {
             return false;
         }
 
         // Check exclusion zones.
         // This needs to be passed in manually due to PVS.
-        if (exclusionZones != null)
+        if (!ignoreExclusionZones && exclusionZones != null)
         {
             foreach (var exclusion in exclusionZones)
             {
@@ -219,6 +217,9 @@ public abstract partial class SharedShuttleSystem : EntitySystem
                     return false;
             }
         }
+
+        if (travelToPlanets)
+            return true;
 
         var ourFTLBuffer = GetFTLBufferRange(shuttleUid);
         var circle = new PhysShapeCircle(ourFTLBuffer + FTLBufferRange, targetPosition);
