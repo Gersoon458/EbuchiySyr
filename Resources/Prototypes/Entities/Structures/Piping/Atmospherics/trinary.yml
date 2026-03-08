@@ -43,7 +43,11 @@
           map: [ "enum.PipeVisualLayers.Pipe" ]
         - state: gasFilter
           map: [ "enum.SubfloorLayers.FirstLayer", "enabled" ]
-        - state: connector # WWDP edit
+        - state: connector # WWDP edit start
+        - sprite: _White/Structures/Piping/Atmospherics/arrows.rsi
+          color: "#00000000" # visible: false - This crap doesn't work. For some reason, it won't turn off the layer display.
+          state: trinary
+          map: [ "enum.AltExamineVisualLayers.Overlay" ] # WD EDIT end
     - type: Appearance
     - type: GenericVisualizer
       visuals:
@@ -51,6 +55,12 @@
           enabled:
             True: { state: gasFilterOn }
             False: { state: gasFilter }
+        enum.AltExamineVisuals.Active: # WWDP EDIT start
+          enum.AltExamineVisualLayers.Overlay:
+            True: { color: "#FFFFFFFF" }
+            False: { color: "#00000000" }
+            #True: { visible: true } - This crap doesn't work. For some reason, it won't turn off the layer display.
+            #False: { visible: false } # WWDP EDIT end
     - type: PipeColorVisuals
     - type: UserInterface
       interfaces:
@@ -77,6 +87,10 @@
     - type: GuideHelp
       guides:
       - MixingAndFiltering
+    - type: AltExamine # WWDP edit start
+      offsetDistance: 0
+      enableOverride: false
+      outlineColor: "#00000000" # WWDP edit end
 
 - type: entity
   parent: GasFilter
@@ -94,7 +108,11 @@
       map: [ "enum.PipeVisualLayers.Pipe" ]
     - state: gasFilterF
       map: [ "enum.SubfloorLayers.FirstLayer", "enabled" ]
-    - state: connectorF # WD EDIT
+    - state: connectorF # WD EDIT start
+    - sprite: _White/Structures/Piping/Atmospherics/arrows.rsi
+      color: "#00000000" # visible: false - This crap doesn't work. For some reason, it won't turn off the layer display.
+      state: trinaryF
+      map: [ "enum.AltExamineVisualLayers.Overlay" ] # WD EDIT end
   - type: Flippable
     mirrorEntity: GasFilter
   - type: Appearance
@@ -104,9 +122,14 @@
         enabled:
           True: { state: gasFilterFOn }
           False: { state: gasFilterF }
+      enum.AltExamineVisuals.Active: # WWDP EDIT start
+        enum.AltExamineVisualLayers.Overlay:
+          True: { color: "#FFFFFFFF" }
+          False: { color: "#00000000" }
+          #True: { visible: true } - This crap doesn't work. For some reason, it won't turn off the layer display.
+          #False: { visible: false } # WWDP EDIT end
   - type: Construction
     node: filterflipped
-
   - type: PipeColorVisuals
   - type: NodeContainer
     nodes:
@@ -122,6 +145,10 @@
         !type:PipeNode
         nodeGroupID: Pipe
         pipeDirection: North
+  - type: AltExamine # WWDP edit start
+    offsetDistance: 0
+    enableOverride: false
+    outlineColor: "#00000000" # WWDP edit end
 
 - type: entity
   parent: GasTrinaryBase
@@ -139,7 +166,11 @@
           map: [ "enum.PipeVisualLayers.Pipe" ]
         - state: gasMixer
           map: [ "enum.SubfloorLayers.FirstLayer", "enabled" ]
-        - state: connector # WD EDIT
+        - state: connector # WD EDIT start
+        - sprite: _White/Structures/Piping/Atmospherics/arrows.rsi
+          color: "#00000000" # visible: false - This crap doesn't work. For some reason, it won't turn off the layer display.
+          state: trinary
+          map: [ "enum.AltExamineVisualLayers.Overlay" ] # WD EDIT end
     - type: Appearance
     - type: GenericVisualizer
       visuals:
@@ -147,6 +178,12 @@
           enabled:
             True: { state: gasMixerOn }
             False: { state: gasMixer }
+        enum.AltExamineVisuals.Active: # WWDP EDIT start
+          enum.AltExamineVisualLayers.Overlay:
+            True: { color: "#FFFFFFFF" }
+            False: { color: "#00000000" }
+            #True: { visible: true } - This crap doesn't work. For some reason, it won't turn off the layer display.
+            #False: { visible: false } # WWDP EDIT end
     - type: PipeColorVisuals
     - type: UserInterface
       interfaces:
@@ -173,6 +210,10 @@
     - type: GuideHelp
       guides:
       - MixingAndFiltering
+    - type: AltExamine # WWDP edit start
+      offsetDistance: 0
+      enableOverride: false
+      outlineColor: "#00000000" # WWDP edit end
 
 - type: entity
   parent: GasMixer
@@ -190,7 +231,11 @@
       map: [ "enum.PipeVisualLayers.Pipe" ]
     - state: gasMixerF
       map: [ "enum.SubfloorLayers.FirstLayer", "enabled" ]
-    - state: connectorF # WD EDIT
+    - state: connectorF # WD EDIT start
+    - sprite: _White/Structures/Piping/Atmospherics/arrows.rsi
+      color: "#00000000" # visible: false - This crap doesn't work. For some reason, it won't turn off the layer display.
+      state: trinaryF
+      map: [ "enum.AltExamineVisualLayers.Overlay" ] # WD EDIT end
   - type: Appearance
   - type: GenericVisualizer
     visuals:
@@ -198,6 +243,12 @@
         enabled:
           True: { state: gasMixerFOn }
           False: { state: gasMixerF }
+      enum.AltExamineVisuals.Active: # WWDP EDIT start
+        enum.AltExamineVisualLayers.Overlay:
+          True: { color: "#FFFFFFFF" }
+          False: { color: "#00000000" }
+          #True: { visible: true } - This crap doesn't work. For some reason, it won't turn off the layer display.
+          #False: { visible: false } # WWDP EDIT end
   - type: PipeColorVisuals
   - type: Flippable
     mirrorEntity: GasMixer
@@ -217,6 +268,10 @@
         pipeDirection: North
   - type: Construction
     node: mixerflipped
+  - type: AltExamine # WWDP edit start
+    offsetDistance: 0
+    enableOverride: false
+    outlineColor: "#00000000" # WWDP edit end
 
 - type: entity
   parent: GasPipeBase

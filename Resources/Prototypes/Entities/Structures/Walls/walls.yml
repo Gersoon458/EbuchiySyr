@@ -996,8 +996,9 @@
         acts: ["Destruction"]
   - type: IconSmooth
     key: walls
-    additionalKeys:
+    additionalKeys: # WWDP edit start
     - airlocks
+    - shutters # WWDP edit end
     base: solid
 
 - type: entity

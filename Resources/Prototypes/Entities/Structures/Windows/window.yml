@@ -83,9 +83,9 @@
   - type: Airtight
   - type: IconSmooth
     key: windows
-    additionalKeys:
+    additionalKeys: # WWDP edit start
     - walls
-    - airlocks
+    - airlocks # WWDP edit end
     base: window
   - type: Construction
     graph: Window
@@ -105,6 +105,8 @@
     - KnockOn
   - type: SmoothEdge # WWDP edit start
     requireMatchingKey: true
+    blockAdditionalKeys:
+    - shutters
     edgeAdditionalKeys:
     - walls # WWDP edit end
 

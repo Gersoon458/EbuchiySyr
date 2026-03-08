@@ -8,7 +8,7 @@ namespace Content.Shared.IconSmoothing;
 [RegisterComponent, NetworkedComponent]
 public sealed partial class SmoothEdgeComponent : Component
 {
-    [ViewVariables(VVAccess.ReadWrite), DataField("edgeAdditionalKeys")]
+    [ViewVariables(VVAccess.ReadWrite), DataField("edgeAdditionalKeys")] // WWDP edit start
     public List<string> EdgeAdditionalKeys { get; set; } = new();
 
     [ViewVariables(VVAccess.ReadWrite), DataField("requireMatchingKey")]
@@ -16,4 +16,7 @@ public sealed partial class SmoothEdgeComponent : Component
 
     [ViewVariables(VVAccess.ReadWrite), DataField("drawdepth")]
     public int? DrawDepth;
+
+    [ViewVariables(VVAccess.ReadWrite), DataField("blockAdditionalKeys")]
+    public List<string> BlockAdditionalKeys { get; set; } = new(); // WWDP edit end
 }

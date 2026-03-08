@@ -152,39 +152,38 @@ namespace Content.Client.IconSmoothing
                 return;
 
             Vector2i pos;
-
-            EntityUid entityUid;
+            Entity<MapGridComponent>? gridEntity = null;
 
             if (transform.Anchored && TryComp<MapGridComponent>(transform.GridUid, out var grid))
             {
-                entityUid = transform.GridUid.Value;
-                pos = _mapSystem.CoordinatesToTile(transform.GridUid.Value, grid, transform.Coordinates);
+                pos = grid.CoordinatesToTile(transform.Coordinates);
+                gridEntity = (transform.GridUid.Value, grid);
             }
             else
             {
-                // Entity is no longer valid, update around the last position it was at.
                 if (comp.LastPosition is not (EntityUid gridId, Vector2i oldPos))
                     return;
 
                 if (!TryComp(gridId, out grid))
                     return;
 
-                entityUid = gridId;
                 pos = oldPos;
+                gridEntity = (gridId, grid);
             }
 
-            // Yes, we updates ALL smoothing entities surrounding us even if they would never smooth with us.
-            DirtyEntities(_mapSystem.GetAnchoredEntitiesEnumerator(entityUid, grid, pos + new Vector2i(1, 0)));
-            DirtyEntities(_mapSystem.GetAnchoredEntitiesEnumerator(entityUid, grid, pos + new Vector2i(-1, 0)));
-            DirtyEntities(_mapSystem.GetAnchoredEntitiesEnumerator(entityUid, grid, pos + new Vector2i(0, 1)));
-            DirtyEntities(_mapSystem.GetAnchoredEntitiesEnumerator(entityUid, grid, pos + new Vector2i(0, -1)));
+            DirtyEntities(gridEntity.Value.Comp.GetAnchoredEntitiesEnumerator(pos));
+
+            DirtyEntities(gridEntity.Value.Comp.GetAnchoredEntitiesEnumerator(pos + new Vector2i(1, 0)));
+            DirtyEntities(gridEntity.Value.Comp.GetAnchoredEntitiesEnumerator(pos + new Vector2i(-1, 0)));
+            DirtyEntities(gridEntity.Value.Comp.GetAnchoredEntitiesEnumerator(pos + new Vector2i(0, 1)));
+            DirtyEntities(gridEntity.Value.Comp.GetAnchoredEntitiesEnumerator(pos + new Vector2i(0, -1)));
 
             if (comp.Mode is IconSmoothingMode.Corners or IconSmoothingMode.NoSprite or IconSmoothingMode.Diagonal)
             {
-                DirtyEntities(_mapSystem.GetAnchoredEntitiesEnumerator(entityUid, grid, pos + new Vector2i(1, 1)));
-                DirtyEntities(_mapSystem.GetAnchoredEntitiesEnumerator(entityUid, grid, pos + new Vector2i(-1, -1)));
-                DirtyEntities(_mapSystem.GetAnchoredEntitiesEnumerator(entityUid, grid, pos + new Vector2i(-1, 1)));
-                DirtyEntities(_mapSystem.GetAnchoredEntitiesEnumerator(entityUid, grid, pos + new Vector2i(1, -1)));
+                DirtyEntities(gridEntity.Value.Comp.GetAnchoredEntitiesEnumerator(pos + new Vector2i(1, 1)));
+                DirtyEntities(gridEntity.Value.Comp.GetAnchoredEntitiesEnumerator(pos + new Vector2i(-1, -1)));
+                DirtyEntities(gridEntity.Value.Comp.GetAnchoredEntitiesEnumerator(pos + new Vector2i(-1, 1)));
+                DirtyEntities(gridEntity.Value.Comp.GetAnchoredEntitiesEnumerator(pos + new Vector2i(1, -1)));
             }
         }
 

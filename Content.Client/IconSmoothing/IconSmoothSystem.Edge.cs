@@ -73,6 +73,33 @@ public sealed partial class IconSmoothSystem
         var pos = _mapSystem.TileIndicesFor(xform.GridUid.Value, grid, xform.Coordinates);
         var smoothQuery = GetEntityQuery<IconSmoothComponent>();
 
+        // WWDP edit start
+        if (component.BlockAdditionalKeys.Count > 0)
+        {
+            var sameTileEnumerator = grid.GetAnchoredEntitiesEnumerator(pos);
+            while (sameTileEnumerator.MoveNext(out var sameTileEntity))
+            {
+                if (sameTileEntity == uid) continue;
+
+                if (smoothQuery.TryGetComponent(sameTileEntity, out var sameTileSmooth) &&
+                    sameTileSmooth.SmoothKey != null &&
+                    component.BlockAdditionalKeys.Contains(sameTileSmooth.SmoothKey))
+                {
+                    // Скрываем все edge-слои
+                    var allEdgeLayers = Enum.GetValues<EdgeLayer>();
+                    foreach (var edgeLayer in allEdgeLayers)
+                    {
+                        if (sprite.LayerMapTryGet(edgeLayer, out var layerIndex))
+                        {
+                            sprite.LayerSetVisible(layerIndex, false);
+                        }
+                    }
+                    return;
+                }
+            }
+        }
+        // WWDP edit end
+
         // All 8 directions
         var directionMappings = new[]
         {
@@ -115,6 +142,20 @@ public sealed partial class IconSmoothSystem
             sprite.LayerSetVisible(layerIndex, shouldShowEdge);
         }
     }
+
+    // WWDP edit start
+    private void HideAllEdgeLayers(SpriteComponent sprite)
+    {
+        var allEdgeLayers = Enum.GetValues<EdgeLayer>();
+        foreach (var edgeLayer in allEdgeLayers)
+        {
+            if (sprite.LayerMapTryGet(edgeLayer, out var layerIndex))
+            {
+                sprite.LayerSetVisible(layerIndex, false);
+            }
+        }
+    }
+    // WWDP edit end
 
     private bool MatchesEdgeCriteria(SmoothEdgeComponent edge, IconSmoothComponent neighbor)
     {
