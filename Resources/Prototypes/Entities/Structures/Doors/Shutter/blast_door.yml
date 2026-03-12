@@ -7,14 +7,15 @@
   - type: AccessReader
   - type: Sprite
     sprite: Structures/Doors/Shutters/blastdoor.rsi
+    noRot: true # WWDP edit
     layers:
     - state: closed
       map: ["enum.DoorVisualLayers.Base"]
   - type: Door
     closeTimeOne: 0.4
     closeTimeTwo: 0.4
-    openTimeOne: 0.4
-    openTimeTwo: 0.4
+    openTimeOne: 0.6
+    openTimeTwo: 0.6
     openingAnimationTime: 1.0
     closingAnimationTime: 1.0
     canPry: false

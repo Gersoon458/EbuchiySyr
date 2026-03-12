@@ -16,8 +16,16 @@
   - type: CanBuildWindowOnTop
   - type: Sprite
     drawdepth: Walls
-    sprite: Structures/Walls/grille.rsi
+    sprite: Structures/Walls/grille.rsi # WWDP edit start
     layers:
+    - map: [ "enum.EdgeLayer.South" ]
+      state: grille_south
+    - map: [ "enum.EdgeLayer.East" ]
+      state: grille_east
+    - map: [ "enum.EdgeLayer.North" ]
+      state: grille_north
+    - map: [ "enum.EdgeLayer.West" ]
+      state: grille_west # WWDP edit end
     - state: electrified
       sprite: Effects/electricity.rsi
       map: ["enum.ElectrifiedLayers.Sparks"]
@@ -97,6 +105,8 @@
     base: grille
   - type: SmoothEdge
     requireMatchingKey: true
+    blockAdditionalKeys:
+    - shutters
     edgeAdditionalKeys:
     - walls # WWDP edit end
 

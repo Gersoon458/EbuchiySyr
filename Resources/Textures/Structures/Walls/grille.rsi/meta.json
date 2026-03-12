@@ -47,6 +47,22 @@
     {
       "name": "grille7",
       "directions": 4
+    },
+    {
+      "name": "grille_south",
+      "directions": 4
+    },
+    {
+      "name": "grille_west",
+      "directions": 4
+    },
+    {
+      "name": "grille_north",
+      "directions": 4
+    },
+    {
+      "name": "grille_east",
+      "directions": 4
     }
   ]
 }
